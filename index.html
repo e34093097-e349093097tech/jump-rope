@@ -436,7 +436,7 @@ button{font:inherit;color:inherit}
 <!-- Firebase SDK 引入與初始化 -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAN1XmCXzzr6OT1DXw_amZfiqzt5wcmB-o",
@@ -445,7 +445,7 @@ button{font:inherit;color:inherit}
     storageBucket: "mango-6b8fc.firebasestorage.app",
     messagingSenderId: "309909481117",
     appId: "1:309909481117:web:164606c6372cb549339674"
-};
+  };
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
@@ -460,7 +460,8 @@ button{font:inherit;color:inherit}
       }, onErr);
     },
     update: function(id, patch) {
-      return updateDoc(doc(db, "students", id), patch);
+      // 使用 setDoc 搭配 merge: true，避免更新單一跳繩項目時把其他項目的成績洗掉
+      return setDoc(doc(db, "students", id), patch, { merge: true });
     },
     create: function(data) {
       return addDoc(collection(db, "students"), data).then(ref => ({ id: ref.id }));
@@ -469,6 +470,9 @@ button{font:inherit;color:inherit}
       return deleteDoc(doc(db, "students", id));
     }
   };
+
+  // 通知主程式 Firebase 已經準備好
+  window.dispatchEvent(new Event("firebase-ready"));
 </script>
 
 <script>
@@ -584,9 +588,9 @@ function writeRetry(fn){
   });
 }
 function onWriteError(e,id){
-  var code=e&&e.code;
+  console.error("Firestore Write Error:", e);
   if(id)setStatus(id,"error");
-  toast("沒有儲存成功，請檢查網路連線。");
+  toast("沒有儲存成功，請檢查網路連線或 Firebase 權限規則。");
   if(id){delete pending[id];}
   rebuildStudents();recKey="";rosKey="";renderAll();
 }
@@ -626,8 +630,8 @@ function eventChips(selected,withAll){
 
 function renderChrome(){
   var sync=$("#sync");
-  sync.dataset.state="db";
-  sync.textContent="雲端同步中";
+  sync.dataset.state=ready?"db":"loading";
+  sync.textContent=ready?"雲端同步中":"連線中…";
   var n=$("#notice");
   n.innerHTML="";
   document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.tab===ui.tab));b.tabIndex=b.dataset.tab===ui.tab?0:-1;});
@@ -1179,26 +1183,27 @@ function start(){
     var first=!ready;ready=true;
     renderAll(first&&ui.tab==="pk"?"all":null);
   },function(err){
-    toast("資料同步中斷，請檢查網路連線。");
+    console.error("Firestore Subscribe Error:", err);
+    toast("資料同步中斷，請檢查網路連線或 Firebase 規則。");
     renderAll();
   });
 }
+
+function connectAdapter(){
+  adapter = window.myFirebaseAdapter;
+  mode = adapter.kind;
+  start();
+}
+
 function boot(){
   loadPrefs();
   bind();
-  renderAll(); // 先把「正在讀取雲端資料…」與分頁按鈕正常畫出來
-  
-  // 等待 Firebase 模組載入完成後再啟動連線
-  function waitFirebase(){
-    if(window.myFirebaseAdapter){
-      adapter = window.myFirebaseAdapter;
-      mode = adapter.kind;
-      start();
-    } else {
-      setTimeout(waitFirebase, 50); // 每 0.05 秒檢查一次，直到載入完成
-    }
+  renderAll(); // 先把畫面外框與「正在讀取雲端資料…」畫出來，確保按鈕都能點
+  if(window.myFirebaseAdapter){
+    connectAdapter();
+  }else{
+    window.addEventListener("firebase-ready", connectAdapter, {once: true});
   }
-  waitFirebase();
 }
 boot();
 })();
