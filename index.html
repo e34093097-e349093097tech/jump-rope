@@ -1,4 +1,11 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
 <title>跳繩選手選拔</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -7,7 +14,6 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&display=swap">
 <style>
-/* Layout: sticky header with four tabs over one working column (max 1100px); 男生 | 女生 lanes sit side by side on wide screens and stack on phones. PK uses a dark scoreboard over rope-styled power bars. */
 :root{
   --bg:#EDF1F6; --surface:#FFFFFF; --surface-2:#E2E8F1; --ink:#15203A; --ink-2:#5A6680; --line:#D3DBE7;
   --boy:#2456D3; --boy-deep:#173E9E; --boy-soft:#DDE6FB;
@@ -427,6 +433,44 @@ button{font:inherit;color:inherit}
 
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
+<!-- Firebase SDK 引入與初始化 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAN1XmCXzzr6OT1DXw_amZfiqzt5wcmB-o",
+    authDomain: "mango-6b8fc.firebaseapp.com",
+    projectId: "mango-6b8fc",
+    storageBucket: "mango-6b8fc.firebasestorage.app",
+    messagingSenderId: "309909481117",
+    appId: "1:309909481117:web:164606c6372cb549339674"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  window.myFirebaseAdapter = {
+    kind: "db",
+    subscribe: function(onData, onErr) {
+      const col = collection(db, "students");
+      return onSnapshot(col, (snap) => {
+        const rows = snap.docs.map(d => ({ id: d.id, data: d.data() }));
+        onData(rows);
+      }, onErr);
+    },
+    update: function(id, patch) {
+      return updateDoc(doc(db, "students", id), patch);
+    },
+    create: function(data) {
+      return addDoc(collection(db, "students"), data).then(ref => ({ id: ref.id }));
+    },
+    remove: function(id) {
+      return deleteDoc(doc(db, "students", id));
+    }
+  };
+</script>
+
 <script>
 (function(){
 "use strict";
@@ -451,7 +495,6 @@ function nameOf(s){return (s.name&&s.name.trim())?s.name.trim():(s.no+"號");}
 function emptyScores(){var o={};EVK.forEach(function(k){o[k]=null;});return o;}
 function bySeat(a,b){return (a.no-b.no)||(a.id<b.id?-1:a.id>b.id?1:0);}
 
-/* ---------- prefs (per viewer) ---------- */
 function loadPrefs(){
   try{
     var p=JSON.parse(localStorage.getItem("jumprope.prefs")||"{}");
@@ -470,7 +513,6 @@ function savePrefs(){
   try{localStorage.setItem("jumprope.prefs",JSON.stringify({tab:ui.tab,event:ui.event,filter:ui.filter,rankView:ui.rankView,rankMode:ui.rankMode,pk:ui.pk,reveal:ui.reveal}));}catch(e){}
 }
 
-/* ---------- data ---------- */
 function applyPatch(s,p){
   if(!p)return;
   if("name" in p)s.name=p.name;
@@ -502,48 +544,6 @@ function ranking(ev,g){
   return {rows:rows,untested:untested,cutTie:cutTie,tieRank:tieRank,seatsLeft:seatsLeft,total:pool.length,picked:Math.min(inPick.length,PICK)};
 }
 
-/* ---------- storage adapters ---------- */
-function dbAdapter(db){
-  var col=db.collection("students");
-  return {
-    kind:"db",
-    subscribe:function(onData,onErr){
-      return col.onSnapshot(function(snap){
-        onData(snap.docs.filter(function(d){return d.exists;}).map(function(d){return {id:d.id,data:d.data()};}));
-      },onErr);
-    },
-    update:function(id,patch){return col.doc(id).update(patch);},
-    create:function(data){return col.add(data).then(function(ref){return {id:ref.id};});},
-    remove:function(id){return col.doc(id).delete();}
-  };
-}
-function localAdapter(){
-  var KEY="jumprope.local.v1",rows=[],cb=null;
-  try{rows=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(rows))rows=[];}catch(e){rows=[];}
-  function persist(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
-  function emit(){if(cb)cb(rows.map(function(r){return {id:r.id,data:JSON.parse(JSON.stringify(r))};}));}
-  return {
-    kind:"local",
-    subscribe:function(onData){cb=onData;setTimeout(emit,0);return function(){cb=null;};},
-    update:function(id,patch){
-      var r=rows.find(function(x){return x.id===id;});
-      if(!r)return Promise.reject({code:"invalid_argument"});
-      if("name" in patch)r.name=patch.name;
-      if("no" in patch)r.no=patch.no;
-      if("gender" in patch)r.gender=patch.gender;
-      if(patch.scores){r.scores=r.scores||{};for(var k in patch.scores)r.scores[k]=patch.scores[k];}
-      persist();emit();return Promise.resolve();
-    },
-    create:function(data){
-      var id="l"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-      var r=JSON.parse(JSON.stringify(data));r.id=id;rows.push(r);persist();emit();
-      return Promise.resolve({id:id});
-    },
-    remove:function(id){rows=rows.filter(function(r){return r.id!==id;});persist();emit();return Promise.resolve();}
-  };
-}
-
-/* ---------- writes ---------- */
 function mergePatch(a,b){
   var o={};var k;
   if(a){for(k in a)o[k]=a[k];}
@@ -586,14 +586,7 @@ function writeRetry(fn){
 function onWriteError(e,id){
   var code=e&&e.code;
   if(id)setStatus(id,"error");
-  if(code==="invalid_argument"||code==="not_granted"||code==="revoked"){
-    if(mode==="db")canWrite=false;
-    toast("沒有儲存成功：你目前只能查看，或這位同學已經被刪除。");
-  }else if(code==="quota_exceeded"){
-    toast("資料庫已滿，請先刪除不需要的同學。");
-  }else{
-    toast("沒有儲存成功，請檢查網路後再輸入一次。");
-  }
+  toast("沒有儲存成功，請檢查網路連線。");
   if(id){delete pending[id];}
   rebuildStudents();recKey="";rosKey="";renderAll();
 }
@@ -608,13 +601,12 @@ function paintStatus(id){
   if(el)el.className="st "+(status[id]||"");
 }
 
-/* ---------- shared bits ---------- */
 var toastTimer=null;
 function toast(msg){
   var t=$("#toast");t.textContent=msg;t.hidden=false;
   clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.hidden=true;},3200);
 }
-function loadingHTML(){return '<div class="state"><p>正在讀取班級資料…</p></div>';}
+function loadingHTML(){return '<div class="state"><p>正在讀取雲端資料…</p></div>';}
 function emptyRosterHTML(){
   return '<div class="state"><h3>還沒有學生名單</h3><p>先到「名單」建立全班同學，就可以開始輸入跳繩次數。</p><button type="button" class="btn primary" data-goto="roster">前往名單</button></div>';
 }
@@ -632,22 +624,16 @@ function eventChips(selected,withAll){
   return html;
 }
 
-/* ---------- header + notice ---------- */
 function renderChrome(){
   var sync=$("#sync");
-  if(mode==="loading"){sync.dataset.state="loading";sync.textContent="連線中…";}
-  else if(mode==="local"){sync.dataset.state="local";sync.textContent="只存在這台裝置";}
-  else if(!canWrite){sync.dataset.state="view";sync.textContent="僅供查看";}
-  else{sync.dataset.state="db";sync.textContent="雲端同步";}
+  sync.dataset.state="db";
+  sync.textContent="雲端同步中";
   var n=$("#notice");
-  if(mode==="local")n.innerHTML='<div class="notice"><strong>離線模式</strong><span>沒有連上雲端資料庫，這次輸入的成績只會存在這台裝置的瀏覽器裡。</span></div>';
-  else if(mode==="db"&&!canWrite)n.innerHTML='<div class="notice"><strong>僅供查看</strong><span>你可以看成績、排名和 PK，但不能修改。</span></div>';
-  else n.innerHTML="";
+  n.innerHTML="";
   document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.tab===ui.tab));b.tabIndex=b.dataset.tab===ui.tab?0:-1;});
   TABS.forEach(function(t){$("#view-"+t).hidden=(t!==ui.tab);});
 }
 
-/* ---------- record tab ---------- */
 function renderRecord(){
   $("#rec-events").innerHTML=eventChips(ui.event,false);
   document.querySelectorAll("#rec-filter button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.f===ui.filter));});
@@ -712,7 +698,6 @@ function patchRecord(){
   ["M","F"].forEach(function(g){var el=document.querySelector('[data-lanemeta="'+g+'"]');if(el)el.textContent=laneMeta(g,maps[g].R);});
 }
 
-/* ---------- rank tab ---------- */
 var RANK_HINT={split:"男生、女生各自排名，前 5 名是選手。",mixed:"全班男女一起排，選手仍是男女各取前 5 名。",vs:"第 1 名比第 1 名、第 2 名比第 2 名，一路比到最後一名。"};
 function renderRank(){
   $("#rank-events").innerHTML=eventChips(ui.rankView,true);
@@ -890,7 +875,6 @@ function summaryHTML(){
   return html+'</div>';
 }
 
-/* ---------- PK tab ---------- */
 var PK_MODES=[1,2,3,4,5,"sum"];
 function modeLabel(m){return m==="sum"?"前五名合計":"第 "+m+" 名";}
 function pkData(ev){
@@ -992,7 +976,6 @@ function countUp(el,to){
   requestAnimationFrame(step);
 }
 
-/* ---------- roster tab ---------- */
 var TRASH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
 function renderRoster(){
   var m=students.filter(function(s){return s.gender==="M";}).length,f=students.length-m;
@@ -1051,7 +1034,6 @@ function patchRoster(){
   });
 }
 
-/* ---------- render orchestration ---------- */
 function renderAll(pkAnim){
   renderChrome();
   if(ui.tab==="record")renderRecord();
@@ -1067,7 +1049,6 @@ function setTab(t){
   window.scrollTo(0,0);
 }
 
-/* ---------- events ---------- */
 function bind(){
   document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest(".tab");if(b)setTab(b.dataset.tab);});
   document.querySelector(".tabs").addEventListener("keydown",function(e){
@@ -1192,39 +1173,25 @@ function quickCreate(){
     .then(function(){ui.busy=false;rosKey="";renderAll();});
 }
 
-/* ---------- boot ---------- */
-var resubscribed=false;
 function start(){
   adapter.subscribe(function(rows){
     snapshotRows=rows;rebuildStudents();
     var first=!ready;ready=true;
     renderAll(first&&ui.tab==="pk"?"all":null);
   },function(err){
-    var code=err&&err.code;
-    if(code==="unavailable"&&!resubscribed){resubscribed=true;setTimeout(start,1200);return;}
-    if(code==="revoked"||code==="not_granted")canWrite=false;
-    toast("資料同步中斷，請重新整理頁面。");
+    toast("資料同步中斷，請檢查網路連線。");
     renderAll();
   });
 }
 function boot(){
-  loadPrefs();bind();renderAll();
-  var c=window.claude;
-  if(!c||typeof c.use!=="function"){adapter=localAdapter();mode="local";start();return;}
-  Promise.all([
-    c.use("db").catch(function(){return null;}),
-    c.use("user").catch(function(){return null;})
-  ]).then(function(res){
-    var db=res[0],user=res[1];
-    var gate=user?user.can("data.write").then(function(w){if(w===false)canWrite=false;}).catch(function(){}):Promise.resolve();
-    return gate.then(function(){
-      adapter=db?dbAdapter(db):localAdapter();
-      mode=adapter.kind;start();
-    });
-  }).catch(function(){adapter=localAdapter();mode="local";start();});
+  loadPrefs();bind();
+  adapter = window.myFirebaseAdapter;
+  mode = adapter.kind;
+  start();
 }
 boot();
 })();
 </script>
 
-</body></html>
+</body>
+</html>
