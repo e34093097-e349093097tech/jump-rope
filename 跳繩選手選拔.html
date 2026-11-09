@@ -1,0 +1,1230 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>跳繩選手選拔</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&display=swap">
+<style>
+/* Layout: sticky header with four tabs over one working column (max 1100px); 男生 | 女生 lanes sit side by side on wide screens and stack on phones. PK uses a dark scoreboard over rope-styled power bars. */
+:root{
+  --bg:#EDF1F6; --surface:#FFFFFF; --surface-2:#E2E8F1; --ink:#15203A; --ink-2:#5A6680; --line:#D3DBE7;
+  --boy:#2456D3; --boy-deep:#173E9E; --boy-soft:#DDE6FB;
+  --girl:#DE442C; --girl-deep:#A93120; --girl-soft:#FBE2DC;
+  --rope:#F4B400; --rope-soft:#FFF0BF; --rope-ink:#3D2C00;
+  --silver:#BAC3D1; --silver-ink:#283244; --bronze:#D9935E; --bronze-ink:#3A1F08;
+  --on-team:#FFFFFF; --ok:#1D8456; --bad:#C2341F;
+  --board:#15203A; --board-ink:#F3F6FB; --board-dim:#93A0BA; --board-boy:#86A6FF; --board-girl:#FF8C76; --board-edge:#15203A;
+  --shadow:0 1px 2px rgba(21,32,58,.06),0 8px 20px rgba(21,32,58,.07);
+  --font-display:"Huninn","Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --font-num:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1420; --surface:#161F31; --surface-2:#1F2A40; --ink:#E7ECF5; --ink-2:#98A4BB; --line:#2A3651;
+    --boy:#6F95FF; --boy-deep:#4A70DE; --boy-soft:#1B2A51;
+    --girl:#FF7A62; --girl-deep:#D9573F; --girl-soft:#47221B;
+    --rope:#FFC83A; --rope-soft:#3A2E0A; --rope-ink:#FFE39A;
+    --silver:#6E7A93; --silver-ink:#F1F4F9; --bronze:#A8673A; --bronze-ink:#FFF1E4;
+    --on-team:#0B1120; --ok:#4CC48C; --bad:#FF7A62;
+    --board:#090E18; --board-ink:#EEF2F8; --board-dim:#7D8AA6; --board-boy:#86A6FF; --board-girl:#FF8C76; --board-edge:#2A3651;
+    --shadow:0 1px 2px rgba(0,0,0,.45),0 8px 20px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1420; --surface:#161F31; --surface-2:#1F2A40; --ink:#E7ECF5; --ink-2:#98A4BB; --line:#2A3651;
+  --boy:#6F95FF; --boy-deep:#4A70DE; --boy-soft:#1B2A51;
+  --girl:#FF7A62; --girl-deep:#D9573F; --girl-soft:#47221B;
+  --rope:#FFC83A; --rope-soft:#3A2E0A; --rope-ink:#FFE39A;
+  --silver:#6E7A93; --silver-ink:#F1F4F9; --bronze:#A8673A; --bronze-ink:#FFF1E4;
+  --on-team:#0B1120; --ok:#4CC48C; --bad:#FF7A62;
+  --board:#090E18; --board-ink:#EEF2F8; --board-dim:#7D8AA6; --board-boy:#86A6FF; --board-girl:#FF8C76; --board-edge:#2A3651;
+  --shadow:0 1px 2px rgba(0,0,0,.45),0 8px 20px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3{text-wrap:balance}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--rope);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px 4px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.logo{width:38px;height:38px;flex:none;color:var(--ink)}
+.logo .h-b{fill:var(--boy)} .logo .h-g{fill:var(--girl)}
+.brand-text{min-width:0}
+.brand h1{font-family:var(--font-display);font-weight:400;font-size:22px;line-height:1.2;letter-spacing:.02em}
+.brand p{font-size:12px;color:var(--ink-2)}
+.sync{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.sync::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ink-2)}
+.sync[data-state="db"]::before{background:var(--ok)}
+.sync[data-state="local"]::before{background:var(--rope)}
+.sync[data-state="loading"]::before{animation:pulse 1s ease-in-out infinite alternate}
+@keyframes pulse{from{opacity:.25}to{opacity:1}}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);max-width:560px}
+.tab{position:relative;height:46px;border:0;background:transparent;cursor:pointer;font-family:var(--font-display);font-size:17px;color:var(--ink-2)}
+.tab[aria-selected="true"]{color:var(--ink)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:20%;right:20%;bottom:0;height:4px;border-radius:4px 4px 0 0;background:var(--rope)}
+
+/* page */
+.main{padding-block:0 40px}
+.view{display:flex;flex-direction:column;gap:16px;padding-block:20px 12px}
+.view-head{display:flex;flex-direction:column;gap:2px}
+.view-head h2{font-family:var(--font-display);font-weight:400;font-size:26px;line-height:1.25}
+.hint{font-size:13px;color:var(--ink-2)}
+.notice{display:flex;gap:8px;align-items:flex-start;margin-top:16px;padding:10px 14px;border-radius:10px;background:var(--rope-soft);color:var(--rope-ink);font-size:13px}
+.notice strong{font-weight:700}
+
+/* event chips */
+.events{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.events.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:600px){
+  .events,.events.five{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .events.five .ev:last-child{grid-column:1 / -1}
+}
+.ev{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;min-width:0}
+.ev-name{font-family:var(--font-display);font-size:18px;line-height:1.2}
+.ev-meta{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ev-bar{display:block;width:100%;height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+.ev-bar i{display:block;height:100%;background:var(--rope)}
+.ev[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.ev[aria-pressed="true"] .ev-meta{color:var(--bg);opacity:.75}
+.ev[aria-pressed="true"] .ev-bar{background:var(--ink-2)}
+
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:11px;background:var(--surface-2)}
+.seg button{border:0;background:transparent;color:var(--ink-2);font-weight:500;padding:6px 16px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.legend{display:flex;gap:12px;font-size:12px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* lanes */
+.lanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.lanes.one{grid-template-columns:minmax(0,640px)}
+@media (max-width:780px){.lanes{grid-template-columns:minmax(0,1fr)}}
+.lane{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;min-width:0}
+.lane-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.lane-head h3{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:400;font-size:19px}
+.sw{width:12px;height:12px;border-radius:4px;background:var(--boy);flex:none}
+.lane.g .sw{background:var(--girl)}
+.lane-meta{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums;text-align:right}
+.lane-empty{padding:16px;color:var(--ink-2);font-size:14px}
+
+/* record rows */
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.seat{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-family:var(--font-num);font-weight:700;font-size:18px;background:var(--boy-soft);color:var(--boy);font-variant-numeric:tabular-nums}
+.g .seat{background:var(--girl-soft);color:var(--girl)}
+.nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.nm.empty{color:var(--ink-2);font-weight:400}
+.rk{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+.rk.sel{background:var(--rope-soft);color:var(--rope-ink);font-weight:700}
+.rk:empty{padding:0;background:none}
+.cnt{position:relative;display:block}
+.cnt-in{width:78px;height:44px;border-radius:11px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font-family:var(--font-num);font-weight:700;font-size:26px;text-align:center;font-variant-numeric:tabular-nums;padding:0}
+.cnt-in::placeholder{color:var(--ink-2);opacity:.6}
+.cnt-in:focus{outline:none;border-color:var(--ink);background:var(--surface);box-shadow:0 0 0 3px var(--rope-soft)}
+.cnt-in:disabled{opacity:.7}
+.st{position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;border:2px solid var(--surface);background:transparent;pointer-events:none}
+.st.saving{background:var(--rope)} .st.saved{background:var(--ok)} .st.error{background:var(--bad)}
+.st:not(.saving):not(.saved):not(.error){border-color:transparent}
+
+/* rank rows */
+.rr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px}
+.rr.out{color:var(--ink-2)}
+.medal{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-num);font-weight:800;font-size:18px;background:var(--surface-2);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.medal.m1{background:var(--rope);color:var(--rope-ink)}
+.medal.m2{background:var(--silver);color:var(--silver-ink)}
+.medal.m3{background:var(--bronze);color:var(--bronze-ink)}
+.medal.in{background:var(--surface-2);color:var(--ink)}
+.rr-main{min-width:0}
+.rr-name{display:flex;align-items:center;gap:6px;min-width:0;font-weight:500}
+.rr-name .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rr-seat{font-size:12px;color:var(--ink-2);font-weight:400;flex:none}
+.tag{flex:none;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--rope-soft);color:var(--rope-ink)}
+.tag.warn{background:var(--girl-soft);color:var(--girl)}
+.bar{height:6px;border-radius:3px;background:var(--surface-2);margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:3px;background:var(--boy)}
+.g .bar i{background:var(--girl)}
+.rr.out .bar i{opacity:.4}
+.score{font-family:var(--font-num);font-weight:800;font-size:30px;line-height:1;font-variant-numeric:tabular-nums;text-align:right}
+.score small{font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--ink-2);margin-left:2px}
+.cutline{display:flex;align-items:center;gap:10px;padding:4px 16px;font-size:12px;font-weight:700;color:var(--rope-ink)}
+.cutline::before,.cutline::after{content:"";flex:1;border-top:2px dashed var(--rope)}
+.untested{padding:10px 16px 14px;font-size:13px;color:var(--ink-2);border-top:1px solid var(--line)}
+.lane-note{margin:10px 16px 0;padding:8px 12px;border-radius:9px;font-size:13px;background:var(--girl-soft);color:var(--girl)}
+.lane-note.soft{background:var(--surface-2);color:var(--ink-2)}
+
+/* mixed ranking */
+.wide-col{max-width:820px;width:100%}
+.stack{display:flex;flex-direction:column;gap:12px}
+.gchip{flex:none;font-size:11px;font-weight:700;padding:1px 6px;border-radius:5px;background:var(--boy-soft);color:var(--boy)}
+.g .gchip{background:var(--girl-soft);color:var(--girl)}
+.score-col{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.score-col .sub{font-size:11px;color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* boys vs girls ladder */
+.vs-sum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:14px 12px 12px;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow)}
+.vs-stat{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;color:var(--ink-2);text-align:center}
+.vs-big{font-family:var(--font-num);font-weight:800;font-size:44px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.vs-stat.b .vs-big{color:var(--boy)} .vs-stat.g .vs-big{color:var(--girl)}
+.vs-foot{grid-column:1 / -1;display:flex;flex-direction:column;gap:2px;margin-top:4px;padding-top:10px;border-top:1px solid var(--line);text-align:center;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.vs-list{border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.vs-head,.vs-row{display:grid;grid-template-columns:minmax(0,1fr) 40px minmax(0,1fr);align-items:center;gap:8px 10px;padding-left:16px;padding-right:16px}
+.vs-head{padding-block:10px;border-bottom:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink-2)}
+.vs-head .h-b{display:flex;align-items:center;gap:6px}
+.vs-head .h-mid{text-align:center;font-weight:400}
+.vs-head .h-g{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.vs-row{padding-block:10px 12px;border-bottom:1px solid var(--line)}
+.vs-row:last-child{border-bottom:0}
+.vs-side{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.vs-who{display:flex;flex-direction:column;min-width:0}
+.vs-side.g .vs-who{align-items:flex-end;text-align:right}
+.vs-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.vs-note{font-size:11px;color:var(--ink-2)}
+.vs-num{display:inline-flex;align-items:center;gap:3px;font-family:var(--font-num);font-weight:800;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.vs-side.b .vs-num{color:var(--boy)} .vs-side.g .vs-num{color:var(--girl)}
+.vs-num .crown{width:16px;height:11px}
+.vs-side.lose .vs-num{opacity:.4}
+.vs-side.lose .vs-name{color:var(--ink-2)}
+.vs-side.none{color:var(--ink-2);font-size:13px}
+.vs-side.g.none{justify-content:flex-end}
+.vs-pos{justify-self:center;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-num);font-weight:800;font-size:18px;background:var(--surface-2);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.vs-pos.m1{background:var(--rope);color:var(--rope-ink)}
+.vs-pos.m2{background:var(--silver);color:var(--silver-ink)}
+.vs-pos.m3{background:var(--bronze);color:var(--bronze-ink)}
+.vs-pos.tie{box-shadow:0 0 0 2px var(--rope)}
+.vs-bar{grid-column:1 / -1;position:relative;display:flex;height:6px;border-radius:3px;background:var(--surface-2)}
+.vs-bar .bb{display:block;height:100%;border-radius:3px 0 0 3px;background:var(--boy)}
+.vs-bar .gg{display:block;flex:1;height:100%;border-radius:0 3px 3px 0;background:var(--girl)}
+.vs-bar::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--ink);opacity:.3}
+.vs-list .untested{border-top:1px solid var(--line)}
+
+/* summary */
+.sum-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:780px){.sum-grid{grid-template-columns:minmax(0,1fr)}}
+.sum-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sum-card h3{font-family:var(--font-display);font-weight:400;font-size:20px}
+.sum-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.sum-col h4{display:flex;align-items:center;gap:6px;font-size:12px;letter-spacing:.08em;color:var(--ink-2);margin-bottom:6px}
+.sum-col ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.sum-col li{display:grid;grid-template-columns:16px minmax(0,1fr) auto;gap:6px;align-items:center;font-size:14px}
+.li-rank{font-family:var(--font-num);font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.li-name{min-width:0;display:flex;align-items:center;gap:4px}
+.li-name .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li-num{font-family:var(--font-num);font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+.slot{grid-column:1 / -1;color:var(--ink-2);font-size:13px;border:1px dashed var(--line);border-radius:7px;padding:1px 8px}
+.multi{flex:none;font-size:11px;font-weight:700;padding:0 5px;border-radius:5px;background:var(--rope-soft);color:var(--rope-ink)}
+.multi-note{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:12px 16px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.multi-note h3{font-size:13px;font-weight:700;color:var(--ink-2)}
+
+/* PK */
+.modes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:600px){.modes{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.mode{height:44px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-family:var(--font-display);font-size:16px}
+.mode[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.switch{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-size:14px}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.track{position:relative;flex:none;width:44px;height:26px;border-radius:13px;background:var(--surface-2);border:1.5px solid var(--line);transition:background .2s}
+.track::after{content:"";position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:var(--surface);box-shadow:var(--shadow);transition:transform .2s}
+.switch input:checked + .track{background:var(--rope);border-color:var(--rope)}
+.switch input:checked + .track::after{transform:translateX(18px)}
+.switch input:focus-visible + .track{outline:3px solid var(--rope);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:42px;padding:0 16px;border-radius:11px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font-weight:500;cursor:pointer;white-space:nowrap}
+.btn.small{height:36px;padding:0 12px;font-size:14px}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.danger{color:var(--bad);border-color:var(--bad);background:transparent}
+.btn.danger.fill{background:var(--bad);color:var(--on-team)}
+.btn:disabled{opacity:.5;cursor:default}
+
+.board{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;padding:16px 20px;border-radius:18px;background:var(--board);color:var(--board-ink);border:1px solid var(--board-edge)}
+.tm{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.tm-name{font-family:var(--font-display);font-size:18px;display:inline-flex;align-items:center;gap:6px}
+.tm-lead{font-family:var(--font-body);font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--rope);color:var(--rope-ink)}
+.tm-score{font-family:var(--font-num);font-weight:800;font-size:clamp(56px,11vw,96px);line-height:.9;font-variant-numeric:tabular-nums}
+.tm.b .tm-score{color:var(--board-boy)} .tm.g .tm-score{color:var(--board-girl)}
+.tm-mid{display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.tm-title{font-size:12px;letter-spacing:.12em;color:var(--board-dim)}
+.tm-colon{font-family:var(--font-num);font-weight:700;font-size:clamp(36px,7vw,60px);line-height:1;color:var(--board-dim)}
+.tm-sub{font-size:12px;color:var(--board-dim);min-height:18px;font-variant-numeric:tabular-nums}
+.board-result{text-align:center;font-family:var(--font-display);font-size:18px;margin-top:-4px}
+.board-result.b{color:var(--boy)} .board-result.g{color:var(--girl)}
+
+.pk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:780px){.pk-grid{grid-template-columns:minmax(0,1fr)}}
+.pk-card{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px 18px 14px;border-radius:18px;background:var(--surface);box-shadow:var(--shadow);min-width:0}
+.pk-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pk-top h3{font-family:var(--font-display);font-weight:400;font-size:21px}
+.verdict{font-size:13px;font-weight:700;padding:3px 11px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.v-b .verdict{background:var(--boy);color:var(--on-team)}
+.v-g .verdict{background:var(--girl);color:var(--on-team)}
+.v-tie .verdict{background:var(--rope);color:var(--rope-ink)}
+.pk-face{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:8px}
+.side{min-width:0;display:flex;flex-direction:column;gap:2px}
+.side.g{align-items:flex-end;text-align:right}
+.who{display:flex;align-items:center;gap:4px;max-width:100%;font-size:14px;color:var(--ink-2)}
+.who .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crown{width:20px;height:14px;flex:none;fill:var(--rope)}
+.num{font-family:var(--font-num);font-weight:800;font-size:clamp(44px,9vw,64px);line-height:.95;font-variant-numeric:tabular-nums}
+.side.b .num{color:var(--boy)} .side.g .num{color:var(--girl)}
+.side.lose .num{opacity:.45}
+.hidden-card .num{color:var(--ink-2)!important;opacity:.35}
+.vs{font-family:var(--font-num);font-weight:700;font-size:18px;color:var(--ink-2);padding-bottom:8px}
+.rope{position:relative;display:flex;height:16px;margin-block:4px;border-radius:8px;background:var(--surface-2)}
+.seg-b{display:block;height:100%;border-radius:8px 0 0 8px;background:repeating-linear-gradient(-55deg,var(--boy) 0 7px,var(--boy-deep) 7px 10px);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.seg-g{display:block;flex:1;height:100%;border-radius:0 8px 8px 0;background:repeating-linear-gradient(55deg,var(--girl) 0 7px,var(--girl-deep) 7px 10px)}
+.v-wait .seg-b,.v-wait .seg-g{background:var(--surface-2)}
+.mid{position:absolute;left:50%;top:-6px;bottom:-6px;width:2px;margin-left:-1px;border-radius:1px;background:var(--ink);opacity:.3}
+.knot{position:absolute;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;background:var(--rope);border:3px solid var(--surface);box-shadow:var(--shadow);transition:left 1s cubic-bezier(.2,.8,.2,1)}
+.v-wait .knot{display:none}
+.diff{text-align:center;font-size:13px;color:var(--ink-2);min-height:20px;font-variant-numeric:tabular-nums}
+.reveal-btn{align-self:center;min-width:160px}
+
+/* roster */
+.ros-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;max-width:720px;width:100%}
+.ros-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:8px 12px 8px 14px;border-bottom:1px solid var(--line);border-left:4px solid var(--boy)}
+.ros-row.g{border-left-color:var(--girl)}
+.ros-row:last-child{border-bottom:0}
+.field{height:42px;width:100%;min-width:0;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:16px;padding:0 10px}
+.field:focus{outline:none;border-color:var(--ink);background:var(--surface);box-shadow:0 0 0 3px var(--rope-soft)}
+.field:disabled{opacity:.7}
+.field.no{text-align:center;font-family:var(--font-num);font-weight:700;font-size:20px;padding:0 4px}
+.gt{display:inline-flex;padding:3px;gap:2px;border-radius:10px;background:var(--surface-2)}
+.gt button{border:0;background:transparent;color:var(--ink-2);padding:5px 10px;border-radius:7px;cursor:pointer;font-weight:500}
+.gt button[aria-pressed="true"][data-g="M"]{background:var(--boy);color:var(--on-team)}
+.gt button[aria-pressed="true"][data-g="F"]{background:var(--girl);color:var(--on-team)}
+.gt button:disabled{cursor:default}
+.icon-btn{width:38px;height:38px;display:grid;place-items:center;border:0;border-radius:10px;background:transparent;color:var(--ink-2);cursor:pointer}
+.icon-btn:hover{background:var(--surface-2);color:var(--bad)}
+.icon-btn svg{width:18px;height:18px}
+.ros-row.confirm{grid-template-columns:minmax(0,1fr) auto;background:var(--girl-soft)}
+.confirm-actions{display:flex;gap:6px}
+.ros-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;max-width:720px}
+.ros-actions .grow{flex:1}
+.qc{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.qc label{display:flex;align-items:center;gap:8px;font-weight:500}
+.qc .field{width:76px;text-align:center}
+
+.state{display:flex;flex-direction:column;align-items:center;gap:10px;padding:32px 20px;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);text-align:center}
+.state h3{font-family:var(--font-display);font-weight:400;font-size:20px}
+.state p{color:var(--ink-2);font-size:14px;max-width:34em}
+
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;max-width:calc(100% - 32px);padding:10px 16px;border-radius:11px;background:var(--ink);color:var(--bg);font-size:14px;box-shadow:var(--shadow)}
+
+@media (max-width:420px){
+  .brand p{display:none}
+  .row{gap:8px;padding:8px 12px}
+  .cnt-in{width:70px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+}
+</style>
+
+<header class="top">
+  <div class="wrap top-row">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M9 27 C 8 5, 32 5, 31 27" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <rect class="h-b" x="6" y="25" width="6.5" height="11" rx="3.2"/>
+        <rect class="h-g" x="27.5" y="25" width="6.5" height="11" rx="3.2"/>
+      </svg>
+      <div class="brand-text">
+        <h1>跳繩選手選拔</h1>
+        <p>跑步跳 · 開叉跳 · 體側跳 · 二迴旋，男女各選 5 位選手</p>
+      </div>
+    </div>
+    <span id="sync" class="sync" data-state="loading">連線中…</span>
+  </div>
+  <div class="wrap">
+    <nav class="tabs" role="tablist" aria-label="功能">
+      <button class="tab" role="tab" id="tab-record" data-tab="record" aria-controls="view-record">紀錄</button>
+      <button class="tab" role="tab" id="tab-rank" data-tab="rank" aria-controls="view-rank">排名</button>
+      <button class="tab" role="tab" id="tab-pk" data-tab="pk" aria-controls="view-pk">男女 PK</button>
+      <button class="tab" role="tab" id="tab-roster" data-tab="roster" aria-controls="view-roster">名單</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap main">
+  <div id="notice"></div>
+
+  <section id="view-record" class="view" role="tabpanel" aria-labelledby="tab-record">
+    <div class="view-head">
+      <h2>輸入成績</h2>
+      <p class="hint">先選項目，輸入次數後按 Enter 會跳到下一位同學。清空欄位就是刪除該筆成績。</p>
+    </div>
+    <div id="rec-events" class="events"></div>
+    <div class="toolbar">
+      <div class="seg" id="rec-filter" role="group" aria-label="顯示哪些同學">
+        <button type="button" data-f="all">全部</button>
+        <button type="button" data-f="M">男生</button>
+        <button type="button" data-f="F">女生</button>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--rope)"></i>儲存中</span>
+        <span><i style="background:var(--ok)"></i>已儲存</span>
+      </div>
+    </div>
+    <div id="rec-list"></div>
+  </section>
+
+  <section id="view-rank" class="view" role="tabpanel" aria-labelledby="tab-rank" hidden>
+    <div class="view-head">
+      <h2>各項目排名</h2>
+      <p class="hint">每個項目男生、女生各取前 5 名當選手。同分的同學名次相同。</p>
+    </div>
+    <div id="rank-events" class="events five"></div>
+    <div class="toolbar" id="rank-tools">
+      <div class="seg" id="rank-mode" role="group" aria-label="排名方式">
+        <button type="button" data-m="split">男女分開</button>
+        <button type="button" data-m="mixed">男女一起</button>
+        <button type="button" data-m="vs">男女對照</button>
+      </div>
+      <span class="hint" id="rank-mode-hint"></span>
+    </div>
+    <div id="rank-body"></div>
+  </section>
+
+  <section id="view-pk" class="view" role="tabpanel" aria-labelledby="tab-pk" hidden>
+    <div class="view-head">
+      <h2>男女 PK</h2>
+      <p class="hint">同一個項目，男生和女生同名次的同學比次數，次數多的那一隊贏。</p>
+    </div>
+    <div id="pk-modes" class="modes" role="group" aria-label="比哪個名次"></div>
+    <div class="toolbar">
+      <label class="switch" for="reveal-toggle">
+        <input type="checkbox" id="reveal-toggle">
+        <span class="track"></span>
+        <span>揭曉模式：先蓋牌，一項一項公布</span>
+      </label>
+      <button type="button" class="btn small" id="reveal-reset" hidden>全部蓋回去</button>
+    </div>
+    <div id="pk-board"></div>
+    <div id="pk-cards" class="pk-grid"></div>
+  </section>
+
+  <section id="view-roster" class="view" role="tabpanel" aria-labelledby="tab-roster" hidden>
+    <div class="view-head">
+      <h2>班級名單</h2>
+      <p class="hint" id="ros-summary">修改座號、姓名和性別，所有分頁會一起更新。</p>
+    </div>
+    <div id="ros-body"></div>
+  </section>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+"use strict";
+var EVENTS=[{k:"run",n:"跑步跳"},{k:"split",n:"開叉跳"},{k:"side",n:"體側跳"},{k:"double",n:"二迴旋"}];
+var EVK=EVENTS.map(function(e){return e.k;});
+var TEAM={M:"男生",F:"女生"};
+var PICK=5;
+var TABS=["record","rank","pk","roster"];
+
+var ui={tab:"record",event:"run",filter:"all",rankView:"run",rankMode:"split",pk:1,reveal:false,revealed:new Set(),confirmDel:null,confirmClear:false,busy:false};
+var students=[], snapshotRows=[], ready=false, mode="loading", canWrite=true, adapter=null;
+var pending={}, sending={}, chains={}, timers={}, status={}, statusTimers={}, dirty={};
+var recKey="", rosKey="", focusAfter=null;
+var reduced=false;
+try{reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
+
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function isNum(v){return typeof v==="number"&&isFinite(v);}
+function evName(k){for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].k===k)return EVENTS[i].n;}return k;}
+function nameOf(s){return (s.name&&s.name.trim())?s.name.trim():(s.no+"號");}
+function emptyScores(){var o={};EVK.forEach(function(k){o[k]=null;});return o;}
+function bySeat(a,b){return (a.no-b.no)||(a.id<b.id?-1:a.id>b.id?1:0);}
+
+/* ---------- prefs (per viewer) ---------- */
+function loadPrefs(){
+  try{
+    var p=JSON.parse(localStorage.getItem("jumprope.prefs")||"{}");
+    if(TABS.indexOf(p.tab)>=0)ui.tab=p.tab;
+    if(EVK.indexOf(p.event)>=0)ui.event=p.event;
+    if(["all","M","F"].indexOf(p.filter)>=0)ui.filter=p.filter;
+    if(EVK.indexOf(p.rankView)>=0||p.rankView==="all")ui.rankView=p.rankView;
+    if(["split","mixed","vs"].indexOf(p.rankMode)>=0)ui.rankMode=p.rankMode;
+    if([1,2,3,4,5,"sum"].indexOf(p.pk)>=0)ui.pk=p.pk;
+    ui.reveal=!!p.reveal;
+  }catch(e){}
+  var h=(location.hash||"").slice(1);
+  if(TABS.indexOf(h)>=0)ui.tab=h;
+}
+function savePrefs(){
+  try{localStorage.setItem("jumprope.prefs",JSON.stringify({tab:ui.tab,event:ui.event,filter:ui.filter,rankView:ui.rankView,rankMode:ui.rankMode,pk:ui.pk,reveal:ui.reveal}));}catch(e){}
+}
+
+/* ---------- data ---------- */
+function applyPatch(s,p){
+  if(!p)return;
+  if("name" in p)s.name=p.name;
+  if("no" in p)s.no=p.no;
+  if("gender" in p)s.gender=p.gender;
+  if(p.scores){for(var k in p.scores){if(EVK.indexOf(k)>=0)s.scores[k]=p.scores[k];}}
+}
+function normalize(id,d){
+  d=d||{};var sc=d.scores||{};
+  var s={id:id,no:isNum(d.no)?d.no:0,name:typeof d.name==="string"?d.name:"",gender:d.gender==="F"?"F":"M",scores:{}};
+  EVK.forEach(function(k){s.scores[k]=isNum(sc[k])?sc[k]:null;});
+  applyPatch(s,sending[id]);applyPatch(s,pending[id]);
+  return s;
+}
+function rebuildStudents(){students=snapshotRows.map(function(r){return normalize(r.id,r.data);});}
+
+function ranking(ev,g){
+  var pool=students.filter(function(s){return s.gender===g;});
+  var tested=pool.filter(function(s){return isNum(s.scores[ev]);}).sort(function(a,b){return (b.scores[ev]-a.scores[ev])||bySeat(a,b);});
+  var rows=tested.map(function(s){
+    var better=0;tested.forEach(function(t){if(t.scores[ev]>s.scores[ev])better++;});
+    return {s:s,score:s.scores[ev],rank:better+1};
+  });
+  var inPick=rows.filter(function(r){return r.rank<=PICK;});
+  var cutTie=inPick.length>PICK;
+  var tieRank=cutTie?inPick[inPick.length-1].rank:null;
+  var seatsLeft=cutTie?PICK-rows.filter(function(r){return r.rank<tieRank;}).length:0;
+  var untested=pool.filter(function(s){return !isNum(s.scores[ev]);}).sort(bySeat);
+  return {rows:rows,untested:untested,cutTie:cutTie,tieRank:tieRank,seatsLeft:seatsLeft,total:pool.length,picked:Math.min(inPick.length,PICK)};
+}
+
+/* ---------- storage adapters ---------- */
+function dbAdapter(db){
+  var col=db.collection("students");
+  return {
+    kind:"db",
+    subscribe:function(onData,onErr){
+      return col.onSnapshot(function(snap){
+        onData(snap.docs.filter(function(d){return d.exists;}).map(function(d){return {id:d.id,data:d.data()};}));
+      },onErr);
+    },
+    update:function(id,patch){return col.doc(id).update(patch);},
+    create:function(data){return col.add(data).then(function(ref){return {id:ref.id};});},
+    remove:function(id){return col.doc(id).delete();}
+  };
+}
+function localAdapter(){
+  var KEY="jumprope.local.v1",rows=[],cb=null;
+  try{rows=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(rows))rows=[];}catch(e){rows=[];}
+  function persist(){try{localStorage.setItem(KEY,JSON.stringify(rows));}catch(e){}}
+  function emit(){if(cb)cb(rows.map(function(r){return {id:r.id,data:JSON.parse(JSON.stringify(r))};}));}
+  return {
+    kind:"local",
+    subscribe:function(onData){cb=onData;setTimeout(emit,0);return function(){cb=null;};},
+    update:function(id,patch){
+      var r=rows.find(function(x){return x.id===id;});
+      if(!r)return Promise.reject({code:"invalid_argument"});
+      if("name" in patch)r.name=patch.name;
+      if("no" in patch)r.no=patch.no;
+      if("gender" in patch)r.gender=patch.gender;
+      if(patch.scores){r.scores=r.scores||{};for(var k in patch.scores)r.scores[k]=patch.scores[k];}
+      persist();emit();return Promise.resolve();
+    },
+    create:function(data){
+      var id="l"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+      var r=JSON.parse(JSON.stringify(data));r.id=id;rows.push(r);persist();emit();
+      return Promise.resolve({id:id});
+    },
+    remove:function(id){rows=rows.filter(function(r){return r.id!==id;});persist();emit();return Promise.resolve();}
+  };
+}
+
+/* ---------- writes ---------- */
+function mergePatch(a,b){
+  var o={};var k;
+  if(a){for(k in a)o[k]=a[k];}
+  for(k in b){
+    if(k==="scores"){var sc={};var j;if(o.scores){for(j in o.scores)sc[j]=o.scores[j];}for(j in b.scores)sc[j]=b.scores[j];o.scores=sc;}
+    else o[k]=b[k];
+  }
+  return o;
+}
+function queue(id,patch,delay){
+  if(!canWrite||!adapter)return;
+  pending[id]=mergePatch(pending[id],patch);
+  var s=students.find(function(x){return x.id===id;});
+  if(s)applyPatch(s,patch);
+  setStatus(id,"saving");
+  clearTimeout(timers[id]);
+  timers[id]=setTimeout(function(){flush(id);},delay==null?500:delay);
+}
+function flush(id){
+  clearTimeout(timers[id]);
+  chains[id]=(chains[id]||Promise.resolve()).then(function(){
+    var patch=pending[id];
+    if(!patch)return;
+    delete pending[id];
+    sending[id]=patch;
+    return writeRetry(function(){return adapter.update(id,patch);})
+      .then(function(){if(!pending[id])setStatus(id,"saved");})
+      .catch(function(e){onWriteError(e,id);})
+      .then(function(){delete sending[id];});
+  });
+  return chains[id];
+}
+function flushAll(){Object.keys(pending).forEach(flush);}
+function writeRetry(fn){
+  return fn().catch(function(e){
+    if(e&&e.code==="unavailable"){return new Promise(function(r){setTimeout(r,400+Math.random()*700);}).then(fn);}
+    throw e;
+  });
+}
+function onWriteError(e,id){
+  var code=e&&e.code;
+  if(id)setStatus(id,"error");
+  if(code==="invalid_argument"||code==="not_granted"||code==="revoked"){
+    if(mode==="db")canWrite=false;
+    toast("沒有儲存成功：你目前只能查看，或這位同學已經被刪除。");
+  }else if(code==="quota_exceeded"){
+    toast("資料庫已滿，請先刪除不需要的同學。");
+  }else{
+    toast("沒有儲存成功，請檢查網路後再輸入一次。");
+  }
+  if(id){delete pending[id];}
+  rebuildStudents();recKey="";rosKey="";renderAll();
+}
+function setStatus(id,st){
+  status[id]=st;
+  clearTimeout(statusTimers[id]);
+  if(st==="saved"){statusTimers[id]=setTimeout(function(){if(status[id]==="saved"){status[id]="";paintStatus(id);}},1600);}
+  paintStatus(id);
+}
+function paintStatus(id){
+  var el=document.querySelector('[data-st="'+id+'"]');
+  if(el)el.className="st "+(status[id]||"");
+}
+
+/* ---------- shared bits ---------- */
+var toastTimer=null;
+function toast(msg){
+  var t=$("#toast");t.textContent=msg;t.hidden=false;
+  clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.hidden=true;},3200);
+}
+function loadingHTML(){return '<div class="state"><p>正在讀取班級資料…</p></div>';}
+function emptyRosterHTML(){
+  return '<div class="state"><h3>還沒有學生名單</h3><p>先到「名單」建立全班同學，就可以開始輸入跳繩次數。</p><button type="button" class="btn primary" data-goto="roster">前往名單</button></div>';
+}
+function eventChips(selected,withAll){
+  var n=students.length;
+  var html=EVENTS.map(function(e){
+    var t=students.filter(function(s){return isNum(s.scores[e.k]);}).length;
+    return '<button type="button" class="ev" data-ev="'+e.k+'" aria-pressed="'+(selected===e.k)+'"><span class="ev-name">'+e.n+'</span><span class="ev-meta">已測 '+t+' / '+n+'</span><span class="ev-bar"><i style="width:'+(n?Math.round(t/n*100):0)+'%"></i></span></button>';
+  }).join("");
+  if(withAll){
+    var full=0;
+    EVENTS.forEach(function(e){["M","F"].forEach(function(g){if(ranking(e.k,g).picked===PICK)full++;});});
+    html+='<button type="button" class="ev" data-ev="all" aria-pressed="'+(selected==="all")+'"><span class="ev-name">選手總表</span><span class="ev-meta">已選滿 '+full+' / 8 組</span><span class="ev-bar"><i style="width:'+Math.round(full/8*100)+'%"></i></span></button>';
+  }
+  return html;
+}
+
+/* ---------- header + notice ---------- */
+function renderChrome(){
+  var sync=$("#sync");
+  if(mode==="loading"){sync.dataset.state="loading";sync.textContent="連線中…";}
+  else if(mode==="local"){sync.dataset.state="local";sync.textContent="只存在這台裝置";}
+  else if(!canWrite){sync.dataset.state="view";sync.textContent="僅供查看";}
+  else{sync.dataset.state="db";sync.textContent="雲端同步";}
+  var n=$("#notice");
+  if(mode==="local")n.innerHTML='<div class="notice"><strong>離線模式</strong><span>沒有連上雲端資料庫，這次輸入的成績只會存在這台裝置的瀏覽器裡。</span></div>';
+  else if(mode==="db"&&!canWrite)n.innerHTML='<div class="notice"><strong>僅供查看</strong><span>你可以看成績、排名和 PK，但不能修改。</span></div>';
+  else n.innerHTML="";
+  document.querySelectorAll(".tab").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.tab===ui.tab));b.tabIndex=b.dataset.tab===ui.tab?0:-1;});
+  TABS.forEach(function(t){$("#view-"+t).hidden=(t!==ui.tab);});
+}
+
+/* ---------- record tab ---------- */
+function renderRecord(){
+  $("#rec-events").innerHTML=eventChips(ui.event,false);
+  document.querySelectorAll("#rec-filter button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.f===ui.filter));});
+  var list=$("#rec-list");
+  if(!ready){list.innerHTML=loadingHTML();recKey="";return;}
+  if(!students.length){list.innerHTML=emptyRosterHTML();recKey="";return;}
+  var key=[ui.event,ui.filter,canWrite,students.slice().sort(bySeat).map(function(s){return s.id+":"+s.no+":"+s.gender+":"+s.name;}).join("|")].join("#");
+  if(key!==recKey){recKey=key;rebuildRecord(list);}else patchRecord();
+}
+function recRankMaps(){
+  var maps={};
+  ["M","F"].forEach(function(g){
+    var R=ranking(ui.event,g);var m={};
+    R.rows.forEach(function(r){m[r.s.id]={rank:r.rank,sel:r.rank<=PICK,tie:R.cutTie&&r.rank===R.tieRank};});
+    maps[g]={map:m,R:R};
+  });
+  return maps;
+}
+function rkText(info){
+  if(!info)return "";
+  return "第 "+info.rank+" 名"+(info.tie?"・同分":"");
+}
+function laneMeta(g,R){return "已測 "+(R.total-R.untested.length)+" / "+R.total+"・選手 "+R.picked+" / "+PICK;}
+function rebuildRecord(list){
+  var ae=document.activeElement;
+  var fid=(ae&&ae.id&&list.contains(ae))?ae.id:null;
+  var groups=ui.filter==="all"?["M","F"]:[ui.filter];
+  var maps=recRankMaps();
+  var html='<div class="lanes'+(groups.length===1?" one":"")+'">';
+  groups.forEach(function(g){
+    var pool=students.filter(function(s){return s.gender===g;}).sort(bySeat);
+    html+='<section class="lane '+(g==="M"?"b":"g")+'"><div class="lane-head"><h3><span class="sw"></span>'+TEAM[g]+'</h3><span class="lane-meta" data-lanemeta="'+g+'">'+laneMeta(g,maps[g].R)+'</span></div>';
+    if(!pool.length)html+='<p class="lane-empty">名單裡還沒有'+TEAM[g]+'。</p>';
+    pool.forEach(function(s){
+      var v=s.scores[ui.event];var info=maps[g].map[s.id];
+      html+='<div class="row '+(g==="M"?"b":"g")+'">'+
+        '<span class="seat">'+s.no+'</span>'+
+        '<span class="nm'+(s.name.trim()?'':' empty')+'">'+(s.name.trim()?esc(s.name.trim()):'未填姓名')+'</span>'+
+        '<span class="rk'+(info&&info.sel?' sel':'')+'" data-rk="'+s.id+'">'+rkText(info)+'</span>'+
+        '<label class="cnt"><span class="sr">'+esc(nameOf(s))+' '+evName(ui.event)+' 次數</span>'+
+        '<input id="in-'+s.id+'" class="cnt-in" data-sid="'+s.id+'" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" enterkeyhint="next" autocomplete="off" placeholder="—" value="'+(isNum(v)?v:"")+'"'+(canWrite?'':' disabled')+'>'+
+        '<span class="st '+(status[s.id]||"")+'" data-st="'+s.id+'"></span></label>'+
+      '</div>';
+    });
+    html+='</section>';
+  });
+  html+='</div>';
+  list.innerHTML=html;
+  if(fid){var el=document.getElementById(fid);if(el){el.focus();try{el.select();}catch(e){}}}
+}
+function patchRecord(){
+  var maps=recRankMaps();
+  students.forEach(function(s){
+    var inp=document.getElementById("in-"+s.id);
+    if(inp&&inp!==document.activeElement&&!dirty[s.id]){
+      var v=s.scores[ui.event];var t=isNum(v)?String(v):"";
+      if(inp.value!==t)inp.value=t;
+    }
+    var rk=document.querySelector('[data-rk="'+s.id+'"]');
+    if(rk){var info=maps[s.gender].map[s.id];rk.textContent=rkText(info);rk.className="rk"+(info&&info.sel?" sel":"");}
+  });
+  ["M","F"].forEach(function(g){var el=document.querySelector('[data-lanemeta="'+g+'"]');if(el)el.textContent=laneMeta(g,maps[g].R);});
+}
+
+/* ---------- rank tab ---------- */
+var RANK_HINT={split:"男生、女生各自排名，前 5 名是選手。",mixed:"全班男女一起排，選手仍是男女各取前 5 名。",vs:"第 1 名比第 1 名、第 2 名比第 2 名，一路比到最後一名。"};
+function renderRank(){
+  $("#rank-events").innerHTML=eventChips(ui.rankView,true);
+  $("#rank-tools").hidden=(ui.rankView==="all");
+  document.querySelectorAll("#rank-mode button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.m===ui.rankMode));});
+  $("#rank-mode-hint").textContent=RANK_HINT[ui.rankMode];
+  var body=$("#rank-body");
+  if(!ready){body.innerHTML=loadingHTML();return;}
+  if(!students.length){body.innerHTML=emptyRosterHTML();return;}
+  if(ui.rankView==="all"){body.innerHTML=summaryHTML();return;}
+  body.innerHTML=ui.rankMode==="mixed"?mixedHTML(ui.rankView):ui.rankMode==="vs"?vsHTML(ui.rankView):rankLanesHTML(ui.rankView);
+}
+function genderRankMap(ev){
+  var m={};
+  ["M","F"].forEach(function(g){
+    var R=ranking(ev,g);
+    R.rows.forEach(function(r){m[r.s.id]={rank:r.rank,sel:r.rank<=PICK,tie:R.cutTie&&r.rank===R.tieRank};});
+  });
+  return m;
+}
+function mixedHTML(ev){
+  var tested=students.filter(function(s){return isNum(s.scores[ev]);}).sort(function(a,b){return (b.scores[ev]-a.scores[ev])||bySeat(a,b);});
+  var untested=students.filter(function(s){return !isNum(s.scores[ev]);}).sort(bySeat);
+  var max=1;tested.forEach(function(s){if(s.scores[ev]>max)max=s.scores[ev];});
+  var gm=genderRankMap(ev);
+  var rows=tested.map(function(s){
+    var better=0;tested.forEach(function(t){if(t.scores[ev]>s.scores[ev])better++;});
+    return {s:s,score:s.scores[ev],rank:better+1};
+  });
+  var top=rows.filter(function(r){return r.rank<=10;});
+  var topM=top.filter(function(r){return r.s.gender==="M";}).length;
+  var html='<section class="lane wide-col"><div class="lane-head"><h3>全班 '+evName(ev)+'</h3><span class="lane-meta">已測 '+tested.length+' / '+students.length+'</span></div>';
+  if(rows.length){
+    html+='<p class="lane-note soft">全班前 10 名裡：男生 '+topM+' 人、女生 '+(top.length-topM)+' 人</p>';
+  }else{
+    html+='<p class="lane-empty">還沒有'+evName(ev)+'的成績。</p>';
+  }
+  rows.forEach(function(r){
+    var s=r.s,gi=gm[s.id]||{},g=s.gender==="M"?"b":"g";
+    var nm=s.name.trim();
+    html+='<div class="rr mx '+g+'">'+
+      '<span class="medal '+(r.rank<=3?"m"+r.rank:"")+'">'+r.rank+'</span>'+
+      '<div class="rr-main"><div class="rr-name"><span class="gchip">'+(s.gender==="M"?"男":"女")+'</span><span class="t">'+esc(nameOf(s))+'</span>'+(nm?'<span class="rr-seat">'+s.no+'號</span>':'')+(gi.sel&&!gi.tie?'<span class="tag">選手</span>':'')+(gi.tie?'<span class="tag warn">同分加賽</span>':'')+'</div>'+
+      '<div class="bar"><i style="width:'+Math.max(2,Math.round(r.score/max*100))+'%"></i></div></div>'+
+      '<div class="score-col"><span class="score">'+r.score+'<small>次</small></span><span class="sub">'+TEAM[s.gender]+'第 '+gi.rank+' 名</span></div>'+
+    '</div>';
+  });
+  if(untested.length){
+    html+='<p class="untested">未測 '+untested.length+' 人：'+untested.map(function(s){return esc(nameOf(s));}).join("、")+'</p>';
+  }
+  return html+'</section>';
+}
+function vsHTML(ev){
+  var B=ranking(ev,"M"),G=ranking(ev,"F");
+  var n=Math.max(B.rows.length,G.rows.length);
+  if(!n){
+    return '<div class="state wide-col"><h3>還沒有'+evName(ev)+'的成績</h3><p>到「紀錄」輸入次數後，這裡會把男生和女生同名次的同學放在一起比。</p><button type="button" class="btn primary" data-goto="record">去輸入成績</button></div>';
+  }
+  var bw=0,gw=0,tw=0,list="";
+  for(var i=0;i<n;i++){
+    var b=B.rows[i],g=G.rows[i];
+    var v=(b&&g)?(b.score>g.score?"b":g.score>b.score?"g":"tie"):"na";
+    if(v==="b")bw++;else if(v==="g")gw++;else if(v==="tie")tw++;
+    if(i===PICK)list+='<div class="cutline">以上是前 5 名</div>';
+    var pos=i+1;
+    var pct=(v==="na")?null:((b.score+g.score)?Math.round(b.score/(b.score+g.score)*1000)/10:50);
+    list+='<div class="vs-row v-'+v+'">'+
+      vsSide(b,"M",v,pos)+
+      '<span class="vs-pos'+(pos<=3?" m"+pos:"")+(v==="tie"?" tie":"")+'" title="'+(v==="tie"?"平手":"")+'">'+pos+'</span>'+
+      vsSide(g,"F",v,pos)+
+      (pct==null?'':'<div class="vs-bar" role="img" aria-label="第 '+pos+' 名：男生 '+b.score+' 次，女生 '+g.score+' 次"><span class="bb" style="width:'+pct+'%"></span><span class="gg"></span></div>')+
+    '</div>';
+  }
+  function avg(R){if(!R.rows.length)return null;var t=0;R.rows.forEach(function(r){t+=r.score;});return Math.round(t/R.rows.length*10)/10;}
+  var ab=avg(B),ag=avg(G);
+  var foot='<span>平均：男生 '+(ab==null?"—":ab+" 次")+'（'+B.rows.length+' 人）・女生 '+(ag==null?"—":ag+" 次")+'（'+G.rows.length+' 人）</span>';
+  if(B.rows.length!==G.rows.length){
+    var fewer=B.rows.length<G.rows.length?"男生":"女生",k=Math.min(B.rows.length,G.rows.length);
+    foot+='<span>'+fewer+'目前只有 '+k+' 人有成績，第 '+(k+1)+' 名之後只列出一隊，不算勝負。</span>';
+  }
+  var html='<div class="stack wide-col">'+
+    '<div class="vs-sum">'+
+      '<div class="vs-stat b"><span class="vs-big">'+bw+'</span><span>男生贏的名次</span></div>'+
+      '<div class="vs-stat"><span class="vs-big">'+tw+'</span><span>平手</span></div>'+
+      '<div class="vs-stat g"><span class="vs-big">'+gw+'</span><span>女生贏的名次</span></div>'+
+      '<p class="vs-foot">'+foot+'</p>'+
+    '</div>'+
+    '<section class="vs-list">'+
+      '<div class="vs-head"><span class="h-b"><span class="sw"></span>男生</span><span class="h-mid">名次</span><span class="h-g">女生<span class="sw" style="background:var(--girl)"></span></span></div>'+
+      list;
+  var um=B.untested,uf=G.untested;
+  if(um.length||uf.length){
+    var parts=[];
+    if(um.length)parts.push("男生 "+um.map(function(s){return esc(nameOf(s));}).join("、"));
+    if(uf.length)parts.push("女生 "+uf.map(function(s){return esc(nameOf(s));}).join("、"));
+    html+='<p class="untested">未測：'+parts.join("；")+'</p>';
+  }
+  return html+'</section></div>';
+}
+function vsSide(r,g,v,pos){
+  var side=g==="M"?"b":"g";
+  if(!r)return '<div class="vs-side '+side+' none">'+(g==="M"?"男生":"女生")+'沒有第 '+pos+' 名</div>';
+  var win=(v==="b"&&g==="M")||(v==="g"&&g==="F");
+  var lose=(v==="b"&&g==="F")||(v==="g"&&g==="M");
+  var note=r.rank!==pos?'<span class="vs-note">同分第 '+r.rank+' 名</span>':(r.s.name.trim()?'<span class="vs-note">'+r.s.no+'號</span>':'');
+  var who='<span class="vs-who"><span class="vs-name">'+esc(nameOf(r.s))+'</span>'+note+'</span>';
+  var num='<span class="vs-num">'+(win&&g==="F"?CROWN:'')+r.score+(win&&g==="M"?CROWN:'')+'</span>';
+  return '<div class="vs-side '+side+(win?" win":"")+(lose?" lose":"")+'">'+(g==="M"?who+num:num+who)+'</div>';
+}
+function rankLanesHTML(ev){
+  var max=1;students.forEach(function(s){if(isNum(s.scores[ev])&&s.scores[ev]>max)max=s.scores[ev];});
+  var html='<div class="lanes">';
+  ["M","F"].forEach(function(g){
+    var R=ranking(ev,g);
+    html+='<section class="lane '+(g==="M"?"b":"g")+'"><div class="lane-head"><h3><span class="sw"></span>'+TEAM[g]+'</h3><span class="lane-meta">'+laneMeta(g,R)+'</span></div>';
+    if(R.cutTie){
+      var k=R.rows.filter(function(r){return r.rank===R.tieRank;}).length;
+      html+='<p class="lane-note">第 '+R.tieRank+' 名有 '+k+' 人同分，只剩 '+R.seatsLeft+' 個選手名額，需要加賽決定。</p>';
+    }else if(R.rows.length&&R.picked<PICK&&R.total>=PICK){
+      html+='<p class="lane-note soft">目前只有 '+R.picked+' 位有成績，還差 '+(PICK-R.picked)+' 位選手。</p>';
+    }
+    if(!R.rows.length){html+='<p class="lane-empty">還沒有'+TEAM[g]+'的'+evName(ev)+'成績。</p>';}
+    var lineDone=false;
+    R.rows.forEach(function(r,i){
+      var sel=r.rank<=PICK;
+      if(!sel&&!lineDone&&i>0){html+='<div class="cutline">以上為選手</div>';lineDone=true;}
+      var tie=R.cutTie&&r.rank===R.tieRank;
+      var medal=r.rank<=3?"m"+r.rank:(sel?"in":"");
+      var nm=r.s.name.trim();
+      html+='<div class="rr'+(sel?'':' out')+'">'+
+        '<span class="medal '+medal+'">'+r.rank+'</span>'+
+        '<div class="rr-main"><div class="rr-name"><span class="t">'+esc(nameOf(r.s))+'</span>'+(nm?'<span class="rr-seat">'+r.s.no+'號</span>':'')+(sel&&!tie?'<span class="tag">選手</span>':'')+(tie?'<span class="tag warn">同分加賽</span>':'')+'</div>'+
+        '<div class="bar"><i style="width:'+Math.max(2,Math.round(r.score/max*100))+'%"></i></div></div>'+
+        '<span class="score">'+r.score+'<small>次</small></span>'+
+      '</div>';
+    });
+    if(R.untested.length){
+      html+='<p class="untested">未測 '+R.untested.length+' 人：'+R.untested.map(function(s){return esc(nameOf(s));}).join("、")+'</p>';
+    }
+    html+='</section>';
+  });
+  return html+'</div>';
+}
+function summaryHTML(){
+  var picks={};
+  var data=EVENTS.map(function(e){
+    var out={e:e};
+    ["M","F"].forEach(function(g){
+      var R=ranking(e.k,g);out[g]=R;
+      R.rows.filter(function(r){return r.rank<=PICK;}).forEach(function(r){(picks[r.s.id]=picks[r.s.id]||[]).push(e.n);});
+    });
+    return out;
+  });
+  var multi=students.filter(function(s){return picks[s.id]&&picks[s.id].length>1;}).sort(function(a,b){return picks[b.id].length-picks[a.id].length||bySeat(a,b);});
+  var html="";
+  if(multi.length){
+    html+='<div class="multi-note"><h3>同時入選兩項以上</h3><p>'+multi.map(function(s){return esc(nameOf(s))+'（'+picks[s.id].join("、")+'）';}).join("　")+'</p></div>';
+  }
+  html+='<div class="sum-grid">';
+  data.forEach(function(d){
+    html+='<section class="sum-card"><h3>'+d.e.n+'</h3><div class="sum-cols">';
+    ["M","F"].forEach(function(g){
+      var R=d[g];var sel=R.rows.filter(function(r){return r.rank<=PICK;});
+      html+='<div class="sum-col '+(g==="M"?"b":"g")+'"><h4><span class="sw" style="background:var(--'+(g==="M"?"boy":"girl")+')"></span>'+TEAM[g]+'</h4><ol>';
+      sel.forEach(function(r){
+        var n=picks[r.s.id]?picks[r.s.id].length:0;
+        var tie=R.cutTie&&r.rank===R.tieRank;
+        html+='<li><span class="li-rank">'+r.rank+'</span><span class="li-name"><span class="t">'+esc(nameOf(r.s))+'</span>'+(tie?'<span class="tag warn">加賽</span>':'')+(n>1?'<span class="multi">'+n+'項</span>':'')+'</span><span class="li-num">'+r.score+'</span></li>';
+      });
+      for(var i=sel.length;i<PICK;i++)html+='<li><span class="slot">待選</span></li>';
+      html+='</ol></div>';
+    });
+    html+='</div></section>';
+  });
+  return html+'</div>';
+}
+
+/* ---------- PK tab ---------- */
+var PK_MODES=[1,2,3,4,5,"sum"];
+function modeLabel(m){return m==="sum"?"前五名合計":"第 "+m+" 名";}
+function pkData(ev){
+  var B=ranking(ev,"M"),G=ranking(ev,"F");
+  if(ui.pk==="sum"){
+    var b=B.rows.slice(0,PICK),g=G.rows.slice(0,PICK);
+    var sum=function(a){return a.reduce(function(t,r){return t+r.score;},0);};
+    return {bv:b.length?sum(b):null,gv:g.length?sum(g):null,bw:"前五名合計（"+b.length+" 人）",gw:"前五名合計（"+g.length+" 人）",partial:b.length<PICK||g.length<PICK};
+  }
+  var rb=B.rows[ui.pk-1],rg=G.rows[ui.pk-1];
+  return {bv:rb?rb.score:null,gv:rg?rg.score:null,bw:rb?nameOf(rb.s):"還沒有成績",gw:rg?nameOf(rg.s):"還沒有成績",partial:false};
+}
+function verdict(d){if(d.bv==null||d.gv==null)return "wait";return d.bv>d.gv?"b":d.gv>d.bv?"g":"tie";}
+var CROWN='<svg class="crown" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 15 L3.6 4.2 L8.6 8.6 L12 1.5 L15.4 8.6 L20.4 4.2 L22 15 Z"/></svg>';
+function renderPK(anim){
+  $("#pk-modes").innerHTML=PK_MODES.map(function(m){return '<button type="button" class="mode" data-pk="'+m+'" aria-pressed="'+(ui.pk===m)+'">'+(m==="sum"?"前五合計":"第"+m+"名")+'</button>';}).join("");
+  $("#reveal-toggle").checked=ui.reveal;
+  $("#reveal-reset").hidden=!(ui.reveal&&ui.revealed.size);
+  var board=$("#pk-board"),cards=$("#pk-cards");
+  if(!ready){board.innerHTML="";cards.innerHTML=loadingHTML();return;}
+  if(!students.length){board.innerHTML="";cards.innerHTML=emptyRosterHTML();return;}
+  var bw=0,gw=0,tw=0,shown=0,decided=0;
+  var results=EVENTS.map(function(e){
+    var key=e.k+"|"+ui.pk;var d=pkData(e.k);var v=verdict(d);
+    var vis=!ui.reveal||ui.revealed.has(key);
+    if(vis){shown++;if(v==="b")bw++;else if(v==="g")gw++;else if(v==="tie")tw++;if(v!=="wait")decided++;}
+    return {e:e,key:key,d:d,v:v,vis:vis};
+  });
+  var lead=bw>gw?"b":gw>bw?"g":"";
+  var sub=[];if(tw)sub.push("平手 "+tw+" 項");if(ui.reveal)sub.push("已揭曉 "+shown+" / 4");
+  board.innerHTML='<div class="board" role="group" aria-label="比分">'+
+    '<div class="tm b"><span class="tm-name">男生隊'+(lead==="b"?'<span class="tm-lead">領先</span>':'')+'</span><span class="tm-score">'+bw+'</span></div>'+
+    '<div class="tm-mid"><span class="tm-title">'+modeLabel(ui.pk)+'對決</span><span class="tm-colon">:</span><span class="tm-sub">'+sub.join("・")+'</span></div>'+
+    '<div class="tm g"><span class="tm-name">'+(lead==="g"?'<span class="tm-lead">領先</span>':'')+'女生隊</span><span class="tm-score">'+gw+'</span></div>'+
+  '</div>'+resultLine(bw,gw,tw,shown,decided,results);
+  cards.innerHTML=results.map(function(r){return cardHTML(r,anim==="all"||(anim instanceof Set&&anim.has(r.key)));}).join("");
+  if(anim)animateCards(cards,anim);
+}
+function resultLine(bw,gw,tw,shown,decided,results){
+  var allDecided=results.every(function(r){return r.v!=="wait";});
+  var txt="",cls="";
+  if(ui.reveal&&shown===0){txt=allDecided?"點每一項的「揭曉結果」開始公布。":"有些項目還沒有成績，先揭曉已經測完的項目。";}
+  else if(decided===0){txt="還沒有可以比的成績，先到「紀錄」輸入次數。";}
+  else if(shown===4&&decided===4){
+    if(bw>gw){txt="男生隊以 "+bw+" 比 "+gw+" 獲勝！";cls="b";}
+    else if(gw>bw){txt="女生隊以 "+gw+" 比 "+bw+" 獲勝！";cls="g";}
+    else txt="雙方 "+bw+" 比 "+gw+"，打成平手！";
+  }else{
+    if(bw>gw){txt="目前男生隊領先";cls="b";}else if(gw>bw){txt="目前女生隊領先";cls="g";}else txt="目前雙方平手";
+  }
+  return '<p class="board-result '+cls+'">'+txt+'</p>';
+}
+function cardHTML(r,anim){
+  var e=r.e,d=r.d,v=r.v;
+  if(!r.vis){
+    return '<article class="pk-card hidden-card v-wait" data-key="'+r.key+'"><div class="pk-top"><h3>'+e.n+'</h3><span class="verdict">蓋牌中</span></div>'+
+      '<div class="pk-face"><div class="side b"><span class="who"><span class="t">男生'+modeLabel(ui.pk)+'</span></span><span class="num">?</span></div><div class="vs">VS</div><div class="side g"><span class="who"><span class="t">女生'+modeLabel(ui.pk)+'</span></span><span class="num">?</span></div></div>'+
+      '<button type="button" class="btn primary reveal-btn" data-reveal="'+r.key+'"'+(v==="wait"?' disabled':'')+'>'+(v==="wait"?"等待成績":"揭曉結果")+'</button></article>';
+  }
+  var total=(d.bv||0)+(d.gv||0);
+  var pct=(v==="wait"||!total)?50:Math.round(d.bv/total*1000)/10;
+  var label={b:"男生勝",g:"女生勝",tie:"平手",wait:"等待成績"}[v];
+  var diff="";
+  if(v==="b")diff="男生多 "+(d.bv-d.gv)+" 次";
+  else if(v==="g")diff="女生多 "+(d.gv-d.bv)+" 次";
+  else if(v==="tie")diff="次數一樣多";
+  else diff=(d.bv==null&&d.gv==null)?"雙方都還沒有成績":(d.bv==null?"等男生的成績":"等女生的成績");
+  if(d.partial&&v!=="wait")diff+="・有一隊不滿 5 人，結果暫定";
+  var w0=anim?50:pct;
+  return '<article class="pk-card v-'+v+'" data-key="'+r.key+'">'+
+    '<div class="pk-top"><h3>'+e.n+'</h3><span class="verdict">'+label+'</span></div>'+
+    '<div class="pk-face">'+
+      '<div class="side b'+(v==="b"?" win":v==="g"?" lose":"")+'"><span class="who">'+(v==="b"?CROWN:"")+'<span class="t">'+esc(d.bw)+'</span></span><span class="num" data-to="'+(d.bv==null?"":d.bv)+'">'+(d.bv==null?"—":(anim?0:d.bv))+'</span></div>'+
+      '<div class="vs">VS</div>'+
+      '<div class="side g'+(v==="g"?" win":v==="b"?" lose":"")+'"><span class="who"><span class="t">'+esc(d.gw)+'</span>'+(v==="g"?CROWN:"")+'</span><span class="num" data-to="'+(d.gv==null?"":d.gv)+'">'+(d.gv==null?"—":(anim?0:d.gv))+'</span></div>'+
+    '</div>'+
+    '<div class="rope" role="img" aria-label="男生 '+(d.bv==null?"沒有成績":d.bv+" 次")+'，女生 '+(d.gv==null?"沒有成績":d.gv+" 次")+'"><span class="seg-b" style="width:'+w0+'%" data-pct="'+pct+'"></span><span class="seg-g"></span><span class="mid"></span><span class="knot" style="left:'+w0+'%" data-pct="'+pct+'"></span></div>'+
+    '<p class="diff">'+diff+'</p>'+
+  '</article>';
+}
+function animateCards(root,anim){
+  var cards=Array.prototype.slice.call(root.querySelectorAll(".pk-card:not(.hidden-card)")).filter(function(c){return anim==="all"||anim.has(c.dataset.key);});
+  if(!cards.length)return;
+  if(reduced){cards.forEach(finishCard);return;}
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    cards.forEach(function(c){
+      c.querySelectorAll("[data-pct]").forEach(function(el){if(el.classList.contains("knot"))el.style.left=el.dataset.pct+"%";else el.style.width=el.dataset.pct+"%";});
+      c.querySelectorAll(".num[data-to]").forEach(function(el){if(el.dataset.to!=="")countUp(el,Number(el.dataset.to));});
+    });
+  });});
+}
+function finishCard(c){
+  c.querySelectorAll("[data-pct]").forEach(function(el){if(el.classList.contains("knot"))el.style.left=el.dataset.pct+"%";else el.style.width=el.dataset.pct+"%";});
+  c.querySelectorAll(".num[data-to]").forEach(function(el){if(el.dataset.to!=="")el.textContent=el.dataset.to;});
+}
+function countUp(el,to){
+  var t0=performance.now(),D=1000;
+  function step(t){var p=Math.min(1,(t-t0)/D);var k=1-Math.pow(1-p,3);el.textContent=Math.round(to*k);if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+
+/* ---------- roster tab ---------- */
+var TRASH='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>';
+function renderRoster(){
+  var m=students.filter(function(s){return s.gender==="M";}).length,f=students.length-m;
+  $("#ros-summary").textContent=ready&&students.length?("男生 "+m+" 人・女生 "+f+" 人・共 "+students.length+" 人。修改後所有分頁會一起更新。"):"修改座號、姓名和性別，所有分頁會一起更新。";
+  var body=$("#ros-body");
+  if(!ready){body.innerHTML=loadingHTML();rosKey="";return;}
+  if(!students.length){
+    rosKey="";
+    body.innerHTML=canWrite?
+      '<div class="state"><h3>建立班級名單</h3><p>依人數建立同學，座號從男生開始排，之後可以再改姓名和性別。</p>'+
+      '<div class="qc"><label for="qc-m">男生<input id="qc-m" class="field" inputmode="numeric" maxlength="2" value="12"></label><label for="qc-f">女生<input id="qc-f" class="field" inputmode="numeric" maxlength="2" value="14"></label></div>'+
+      '<button type="button" class="btn primary" id="qc-go"'+(ui.busy?' disabled':'')+'>'+(ui.busy?"建立中…":"建立名單")+'</button></div>'
+      :'<div class="state"><h3>還沒有學生名單</h3><p>請老師先建立名單。</p></div>';
+    return;
+  }
+  var key=[canWrite,ui.confirmDel,ui.confirmClear,ui.busy,students.slice().sort(bySeat).map(function(s){return s.id+":"+s.no+":"+s.gender;}).join("|")].join("#");
+  if(key!==rosKey){rosKey=key;rebuildRoster(body);}else patchRoster();
+}
+function rebuildRoster(body){
+  var ae=document.activeElement;
+  var fid=(ae&&ae.id&&body.contains(ae))?ae.id:null;
+  var sel=null;try{if(fid&&ae.selectionStart!=null)sel=[ae.selectionStart,ae.selectionEnd];}catch(e){}
+  var dis=canWrite?"":" disabled";
+  var html='<div class="ros-card">';
+  students.slice().sort(bySeat).forEach(function(s){
+    var g=s.gender==="M"?"b":"g";
+    if(ui.confirmDel===s.id){
+      html+='<div class="ros-row confirm '+g+'"><span>刪除 '+esc(nameOf(s))+'和他的所有成績？</span><div class="confirm-actions"><button type="button" class="btn small danger fill" data-del-yes="'+s.id+'">刪除</button><button type="button" class="btn small" data-del-no="1">取消</button></div></div>';
+      return;
+    }
+    html+='<div class="ros-row '+g+'">'+
+      '<input id="no-'+s.id+'" class="field no" data-sid="'+s.id+'" data-kind="no" inputmode="numeric" maxlength="2" aria-label="座號" value="'+s.no+'"'+dis+'>'+
+      '<input id="nm-'+s.id+'" class="field" data-sid="'+s.id+'" data-kind="name" maxlength="12" placeholder="輸入姓名" aria-label="'+s.no+'號姓名" value="'+esc(s.name)+'"'+dis+'>'+
+      '<div class="gt" role="group" aria-label="性別"><button type="button" id="g-'+s.id+'-M" data-sid="'+s.id+'" data-g="M" aria-pressed="'+(s.gender==="M")+'"'+dis+'>男</button><button type="button" id="g-'+s.id+'-F" data-sid="'+s.id+'" data-g="F" aria-pressed="'+(s.gender==="F")+'"'+dis+'>女</button></div>'+
+      (canWrite?'<button type="button" class="icon-btn" id="del-'+s.id+'" data-del="'+s.id+'" aria-label="刪除 '+esc(nameOf(s))+'">'+TRASH+'</button>':'<span></span>')+
+    '</div>';
+  });
+  html+='</div>';
+  if(canWrite){
+    html+='<div class="ros-actions"><button type="button" class="btn" data-add="M">＋ 新增男生</button><button type="button" class="btn" data-add="F">＋ 新增女生</button><span class="grow"></span>'+
+      (ui.confirmClear?
+        '<span class="hint">確定清除全班四個項目的成績？</span><button type="button" class="btn small danger fill" id="clear-yes"'+(ui.busy?' disabled':'')+'>'+(ui.busy?"清除中…":"清除")+'</button><button type="button" class="btn small" id="clear-no">取消</button>'
+        :'<button type="button" class="btn danger" id="clear-ask">清除所有成績</button>')+
+    '</div>';
+  }
+  body.innerHTML=html;
+  var target=focusAfter||fid;focusAfter=null;
+  if(target){var el=document.getElementById(target);if(el){el.focus();if(sel&&target===fid){try{el.setSelectionRange(sel[0],sel[1]);}catch(e){}}}}
+}
+function patchRoster(){
+  students.forEach(function(s){
+    var nm=document.getElementById("nm-"+s.id);
+    if(nm&&nm!==document.activeElement&&!dirty["nm-"+s.id]&&nm.value!==s.name)nm.value=s.name;
+    var no=document.getElementById("no-"+s.id);
+    if(no&&no!==document.activeElement&&no.value!==String(s.no))no.value=s.no;
+  });
+}
+
+/* ---------- render orchestration ---------- */
+function renderAll(pkAnim){
+  renderChrome();
+  if(ui.tab==="record")renderRecord();
+  else if(ui.tab==="rank")renderRank();
+  else if(ui.tab==="pk")renderPK(pkAnim||null);
+  else renderRoster();
+}
+function setTab(t){
+  if(t===ui.tab)return;
+  flushAll();
+  ui.tab=t;ui.confirmDel=null;ui.confirmClear=false;recKey="";rosKey="";
+  savePrefs();renderAll(t==="pk"?"all":null);
+  window.scrollTo(0,0);
+}
+
+/* ---------- events ---------- */
+function bind(){
+  document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest(".tab");if(b)setTab(b.dataset.tab);});
+  document.querySelector(".tabs").addEventListener("keydown",function(e){
+    if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;
+    var i=TABS.indexOf(ui.tab);i=(i+(e.key==="ArrowRight"?1:TABS.length-1))%TABS.length;
+    setTab(TABS[i]);var b=document.getElementById("tab-"+TABS[i]);if(b)b.focus();
+  });
+  document.addEventListener("click",function(e){var g=e.target.closest("[data-goto]");if(g)setTab(g.dataset.goto);});
+
+  $("#rec-events").addEventListener("click",function(e){var b=e.target.closest("[data-ev]");if(!b)return;flushAll();ui.event=b.dataset.ev;savePrefs();renderRecord();});
+  $("#rec-filter").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;ui.filter=b.dataset.f;savePrefs();renderRecord();});
+  var list=$("#rec-list");
+  list.addEventListener("input",function(e){
+    var inp=e.target;if(!inp.classList.contains("cnt-in"))return;
+    var clean=inp.value.replace(/\D/g,"").slice(0,3);
+    if(clean!==inp.value)inp.value=clean;
+    var id=inp.dataset.sid;dirty[id]=true;
+    var sc={};sc[ui.event]=clean===""?null:Number(clean);
+    queue(id,{scores:sc},600);
+    patchRecord();
+    $("#rec-events").innerHTML=eventChips(ui.event,false);
+  });
+  list.addEventListener("focusin",function(e){var inp=e.target;if(inp.classList&&inp.classList.contains("cnt-in"))setTimeout(function(){try{inp.select();}catch(x){}},0);});
+  list.addEventListener("focusout",function(e){
+    var inp=e.target;if(!inp.classList||!inp.classList.contains("cnt-in"))return;
+    var id=inp.dataset.sid;dirty[id]=false;if(pending[id])flush(id);
+  });
+  list.addEventListener("keydown",function(e){
+    var inp=e.target;if(!inp.classList.contains("cnt-in")||e.key!=="Enter")return;
+    e.preventDefault();
+    var all=Array.prototype.slice.call(list.querySelectorAll(".cnt-in"));
+    var nx=all[all.indexOf(inp)+1];
+    if(nx){nx.focus();}else{inp.blur();}
+  });
+
+  $("#rank-events").addEventListener("click",function(e){var b=e.target.closest("[data-ev]");if(!b)return;ui.rankView=b.dataset.ev;savePrefs();renderRank();});
+  $("#rank-mode").addEventListener("click",function(e){var b=e.target.closest("[data-m]");if(!b)return;ui.rankMode=b.dataset.m;savePrefs();renderRank();});
+
+  $("#pk-modes").addEventListener("click",function(e){var b=e.target.closest("[data-pk]");if(!b)return;var m=b.dataset.pk==="sum"?"sum":Number(b.dataset.pk);ui.pk=m;savePrefs();renderPK("all");});
+  $("#reveal-toggle").addEventListener("change",function(e){ui.reveal=e.target.checked;ui.revealed.clear();savePrefs();renderPK("all");});
+  $("#reveal-reset").addEventListener("click",function(){ui.revealed.clear();renderPK(null);});
+  $("#pk-cards").addEventListener("click",function(e){
+    var b=e.target.closest("[data-reveal]");if(!b||b.disabled)return;
+    var k=b.dataset.reveal;ui.revealed.add(k);renderPK(new Set([k]));
+    var c=document.querySelector('.pk-card[data-key="'+k+'"]');if(c){c.setAttribute("tabindex","-1");c.focus({preventScroll:true});}
+  });
+
+  var ros=$("#ros-body");
+  ros.addEventListener("input",function(e){
+    var t=e.target;if(t.dataset.kind!=="name")return;
+    dirty[t.id]=true;queue(t.dataset.sid,{name:t.value.slice(0,12)},700);
+  });
+  ros.addEventListener("focusout",function(e){
+    var t=e.target;
+    if(t.dataset&&t.dataset.kind==="name"){dirty[t.id]=false;if(pending[t.dataset.sid])flush(t.dataset.sid);}
+  });
+  ros.addEventListener("change",function(e){
+    var t=e.target;if(t.dataset.kind!=="no")return;
+    var n=parseInt(t.value.replace(/\D/g,""),10);
+    var s=students.find(function(x){return x.id===t.dataset.sid;});
+    if(!s)return;
+    if(!(n>=1&&n<=99)){t.value=s.no;toast("座號請輸入 1 到 99 的數字。");return;}
+    if(n===s.no)return;
+    if(students.some(function(x){return x.id!==s.id&&x.no===n;}))toast(n+" 號已經有人了，記得調整另一位同學的座號。");
+    queue(s.id,{no:n},0);renderRoster();
+  });
+  ros.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target.classList&&e.target.classList.contains("field"))e.target.blur();});
+  ros.addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;
+    if(b.dataset.g&&b.dataset.sid){
+      var s=students.find(function(x){return x.id===b.dataset.sid;});
+      if(s&&s.gender!==b.dataset.g){focusAfter=b.id;queue(s.id,{gender:b.dataset.g},0);renderRoster();}
+      return;
+    }
+    if(b.dataset.del){ui.confirmDel=b.dataset.del;focusAfter=null;renderRoster();var y=document.querySelector("[data-del-yes]");if(y)y.focus();return;}
+    if(b.dataset.delNo){var id0=ui.confirmDel;ui.confirmDel=null;focusAfter="del-"+id0;renderRoster();return;}
+    if(b.dataset.delYes){
+      var id=b.dataset.delYes;ui.confirmDel=null;
+      delete pending[id];clearTimeout(timers[id]);
+      adapter.remove(id).then(function(){toast("已刪除");}).catch(function(err){onWriteError(err,null);});
+      renderRoster();return;
+    }
+    if(b.dataset.add){
+      var max=students.reduce(function(m,x){return Math.max(m,x.no);},0);
+      adapter.create({no:max+1,name:"",gender:b.dataset.add,scores:emptyScores()})
+        .then(function(r){if(r&&r.id)focusAfter="nm-"+r.id;rosKey="";renderAll();})
+        .catch(function(err){onWriteError(err,null);});
+      return;
+    }
+    if(b.id==="clear-ask"){ui.confirmClear=true;renderRoster();var cy=$("#clear-yes");if(cy)cy.focus();return;}
+    if(b.id==="clear-no"){ui.confirmClear=false;renderRoster();return;}
+    if(b.id==="clear-yes"){clearAllScores();return;}
+    if(b.id==="qc-go"){quickCreate();return;}
+  });
+
+  window.addEventListener("pagehide",flushAll);
+  document.addEventListener("visibilitychange",function(){if(document.visibilityState==="hidden")flushAll();});
+}
+
+function clearAllScores(){
+  if(ui.busy)return;ui.busy=true;renderRoster();
+  var ids=students.map(function(s){return s.id;});
+  var chain=Promise.resolve();
+  ids.forEach(function(id){
+    chain=chain.then(function(){
+      delete pending[id];clearTimeout(timers[id]);
+      return (chains[id]||Promise.resolve()).then(function(){return writeRetry(function(){return adapter.update(id,{scores:emptyScores()});});});
+    });
+  });
+  chain.then(function(){toast("已清除所有成績");}).catch(function(err){onWriteError(err,null);})
+    .then(function(){ui.busy=false;ui.confirmClear=false;rosKey="";renderAll();});
+}
+function quickCreate(){
+  if(ui.busy)return;
+  var m=parseInt(($("#qc-m").value||"").replace(/\D/g,""),10)||0;
+  var f=parseInt(($("#qc-f").value||"").replace(/\D/g,""),10)||0;
+  if(m+f<1||m+f>60){toast("人數請輸入 1 到 60 之間。");return;}
+  ui.busy=true;renderRoster();
+  var chain=Promise.resolve();
+  for(var i=1;i<=m+f;i++){(function(no){chain=chain.then(function(){return adapter.create({no:no,name:"",gender:no<=m?"M":"F",scores:emptyScores()});});})(i);}
+  chain.then(function(){toast("名單建立好了，可以開始填姓名");}).catch(function(err){onWriteError(err,null);})
+    .then(function(){ui.busy=false;rosKey="";renderAll();});
+}
+
+/* ---------- boot ---------- */
+var resubscribed=false;
+function start(){
+  adapter.subscribe(function(rows){
+    snapshotRows=rows;rebuildStudents();
+    var first=!ready;ready=true;
+    renderAll(first&&ui.tab==="pk"?"all":null);
+  },function(err){
+    var code=err&&err.code;
+    if(code==="unavailable"&&!resubscribed){resubscribed=true;setTimeout(start,1200);return;}
+    if(code==="revoked"||code==="not_granted")canWrite=false;
+    toast("資料同步中斷，請重新整理頁面。");
+    renderAll();
+  });
+}
+function boot(){
+  loadPrefs();bind();renderAll();
+  var c=window.claude;
+  if(!c||typeof c.use!=="function"){adapter=localAdapter();mode="local";start();return;}
+  Promise.all([
+    c.use("db").catch(function(){return null;}),
+    c.use("user").catch(function(){return null;})
+  ]).then(function(res){
+    var db=res[0],user=res[1];
+    var gate=user?user.can("data.write").then(function(w){if(w===false)canWrite=false;}).catch(function(){}):Promise.resolve();
+    return gate.then(function(){
+      adapter=db?dbAdapter(db):localAdapter();
+      mode=adapter.kind;start();
+    });
+  }).catch(function(){adapter=localAdapter();mode="local";start();});
+}
+boot();
+})();
+</script>
+
+</body></html>
