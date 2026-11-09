@@ -4,8 +4,6 @@
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
-</head>
-<body>
 <title>跳繩選手選拔</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,11 +90,38 @@ button{font:inherit;color:inherit}
 .notice{display:flex;gap:8px;align-items:flex-start;margin-top:16px;padding:10px 14px;border-radius:10px;background:var(--rope-soft);color:var(--rope-ink);font-size:13px}
 .notice strong{font-weight:700}
 
+/* date & basis bars */
+.date-bar,.basis-bar,.weight-box{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 16px;border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow)}
+.date-picker-wrap{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:14px}
+.date-in{height:36px;padding:0 10px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-family:var(--font-num);font-weight:700;font-size:16px}
+.date-pills{display:flex;flex-wrap:wrap;align-items:center;gap:6px;flex:1;min-width:200px}
+.date-pills-label{font-size:12px;color:var(--ink-2)}
+.dpill{border:1px solid var(--line);background:var(--bg);color:var(--ink-2);font-family:var(--font-num);font-weight:600;font-size:14px;padding:3px 10px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.dpill:hover{border-color:var(--ink-2);color:var(--ink)}
+.dpill.active{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.basis-label{font-size:13px;font-weight:700;color:var(--ink-2)}
+.basis-info{font-size:12px;color:var(--ink-2);margin-left:auto}
+
+/* weighted config box */
+.weight-box{flex-direction:column;align-items:stretch;gap:10px}
+.weight-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.weight-head h3{font-family:var(--font-display);font-weight:400;font-size:17px}
+.weight-checks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.weight-checks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wcheck{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);cursor:pointer;user-select:none;transition:all .15s}
+.wcheck[aria-pressed="true"]{border-color:var(--ink);background:var(--surface);box-shadow:var(--shadow)}
+.wcheck-left{display:flex;align-items:center;gap:8px;font-weight:500}
+.wbox-ind{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--ink-2);display:grid;place-items:center;font-size:12px;color:transparent}
+.wcheck[aria-pressed="true"] .wbox-ind{background:var(--rope);border-color:var(--rope);color:var(--rope-ink);font-weight:800}
+.wbadge{font-family:var(--font-num);font-weight:700;font-size:14px;padding:1px 7px;border-radius:6px;background:var(--surface-2);color:var(--ink-2)}
+.wcheck[aria-pressed="true"] .wbadge{background:var(--rope-soft);color:var(--rope-ink)}
+
 /* event chips */
 .events{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .events.five{grid-template-columns:repeat(5,minmax(0,1fr))}
-@media (max-width:600px){
-  .events,.events.five{grid-template-columns:repeat(2,minmax(0,1fr))}
+.events.six{grid-template-columns:repeat(6,minmax(0,1fr))}
+@media (max-width:720px){
+  .events,.events.five,.events.six{grid-template-columns:repeat(2,minmax(0,1fr))}
   .events.five .ev:last-child{grid-column:1 / -1}
 }
 .ev{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;text-align:left;min-width:0}
@@ -110,7 +135,7 @@ button{font:inherit;color:inherit}
 
 .toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
 .seg{display:inline-flex;gap:2px;padding:3px;border-radius:11px;background:var(--surface-2)}
-.seg button{border:0;background:transparent;color:var(--ink-2);font-weight:500;padding:6px 16px;border-radius:8px;cursor:pointer}
+.seg button{border:0;background:transparent;color:var(--ink-2);font-weight:500;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:14px}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
 .legend{display:flex;gap:12px;font-size:12px;color:var(--ink-2)}
 .legend span{display:inline-flex;align-items:center;gap:5px}
@@ -133,8 +158,11 @@ button{font:inherit;color:inherit}
 .row:last-child{border-bottom:0}
 .seat{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-family:var(--font-num);font-weight:700;font-size:18px;background:var(--boy-soft);color:var(--boy);font-variant-numeric:tabular-nums}
 .g .seat{background:var(--girl-soft);color:var(--girl)}
+.nm-wrap{min-width:0;display:flex;flex-direction:column;gap:1px}
 .nm{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
 .nm.empty{color:var(--ink-2);font-weight:400}
+.best-hint{font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.best-hint.is-pr{color:var(--ok);font-weight:700}
 .rk{font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap;font-variant-numeric:tabular-nums}
 .rk.sel{background:var(--rope-soft);color:var(--rope-ink);font-weight:700}
 .rk:empty{padding:0;background:none}
@@ -148,7 +176,8 @@ button{font:inherit;color:inherit}
 .st:not(.saving):not(.saved):not(.error){border-color:transparent}
 
 /* rank rows */
-.rr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px}
+.rr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)}
+.rr:last-child{border-bottom:0}
 .rr.out{color:var(--ink-2)}
 .medal{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-num);font-weight:800;font-size:18px;background:var(--surface-2);color:var(--ink-2);font-variant-numeric:tabular-nums}
 .medal.m1{background:var(--rope);color:var(--rope-ink)}
@@ -156,9 +185,10 @@ button{font:inherit;color:inherit}
 .medal.m3{background:var(--bronze);color:var(--bronze-ink)}
 .medal.in{background:var(--surface-2);color:var(--ink)}
 .rr-main{min-width:0}
-.rr-name{display:flex;align-items:center;gap:6px;min-width:0;font-weight:500}
+.rr-name{display:flex;align-items:center;gap:6px;min-width:0;font-weight:500;flex-wrap:wrap}
 .rr-name .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rr-seat{font-size:12px;color:var(--ink-2);font-weight:400;flex:none}
+.rr-detail{font-size:11px;color:var(--ink-2);margin-top:3px;font-variant-numeric:tabular-nums}
 .tag{flex:none;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;background:var(--rope-soft);color:var(--rope-ink)}
 .tag.warn{background:var(--girl-soft);color:var(--girl)}
 .bar{height:6px;border-radius:3px;background:var(--surface-2);margin-top:6px;overflow:hidden}
@@ -174,7 +204,7 @@ button{font:inherit;color:inherit}
 .lane-note.soft{background:var(--surface-2);color:var(--ink-2)}
 
 /* mixed ranking */
-.wide-col{max-width:820px;width:100%}
+.wide-col{max-width:860px;width:100%}
 .stack{display:flex;flex-direction:column;gap:12px}
 .gchip{flex:none;font-size:11px;font-weight:700;padding:1px 6px;border-radius:5px;background:var(--boy-soft);color:var(--boy)}
 .g .gchip{background:var(--girl-soft);color:var(--girl)}
@@ -338,6 +368,8 @@ button{font:inherit;color:inherit}
   *{transition:none!important;animation:none!important}
 }
 </style>
+</head>
+<body>
 
 <header class="top">
   <div class="wrap top-row">
@@ -370,7 +402,14 @@ button{font:inherit;color:inherit}
   <section id="view-record" class="view" role="tabpanel" aria-labelledby="tab-record">
     <div class="view-head">
       <h2>輸入成績</h2>
-      <p class="hint">先選項目，輸入次數後按 Enter 會跳到下一位同學。清空欄位就是刪除該筆成績。</p>
+      <p class="hint">先選測驗日期與項目，輸入次數後按 Enter 會跳到下一位同學。每位同學下方會顯示歷史最高紀錄。</p>
+    </div>
+    <div class="date-bar">
+      <label class="date-picker-wrap" for="rec-date">
+        <span>📅 測驗日期</span>
+        <input type="date" id="rec-date" class="date-in">
+      </label>
+      <div class="date-pills" id="rec-date-pills"></div>
     </div>
     <div id="rec-events" class="events"></div>
     <div class="toolbar">
@@ -390,9 +429,11 @@ button{font:inherit;color:inherit}
   <section id="view-rank" class="view" role="tabpanel" aria-labelledby="tab-rank" hidden>
     <div class="view-head">
       <h2>各項目排名</h2>
-      <p class="hint">每個項目男生、女生各取前 5 名當選手。同分的同學名次相同。</p>
+      <p class="hint">每個項目男生、女生各取前 5 名當選手。可切換採計「各項歷史最高」或「指定日期」成績。</p>
     </div>
-    <div id="rank-events" class="events five"></div>
+    <div id="rank-basis" class="basis-bar"></div>
+    <div id="rank-events" class="events six"></div>
+    <div id="rank-weights" hidden></div>
     <div class="toolbar" id="rank-tools">
       <div class="seg" id="rank-mode" role="group" aria-label="排名方式">
         <button type="button" data-m="split">男女分開</button>
@@ -409,6 +450,7 @@ button{font:inherit;color:inherit}
       <h2>男女 PK</h2>
       <p class="hint">同一個項目，男生和女生同名次的同學比次數，次數多的那一隊贏。</p>
     </div>
+    <div id="pk-basis" class="basis-bar"></div>
     <div id="pk-modes" class="modes" role="group" aria-label="比哪個名次"></div>
     <div class="toolbar">
       <label class="switch" for="reveal-toggle">
@@ -460,7 +502,6 @@ button{font:inherit;color:inherit}
       }, onErr);
     },
     update: function(id, patch) {
-      // 使用 setDoc 搭配 merge: true，避免更新單一跳繩項目時把其他項目的成績洗掉
       return setDoc(doc(db, "students", id), patch, { merge: true });
     },
     create: function(data) {
@@ -471,20 +512,50 @@ button{font:inherit;color:inherit}
     }
   };
 
-  // 通知主程式 Firebase 已經準備好
   window.dispatchEvent(new Event("firebase-ready"));
 </script>
 
 <script>
 (function(){
 "use strict";
-var EVENTS=[{k:"run",n:"跑步跳"},{k:"split",n:"開叉跳"},{k:"side",n:"體側跳"},{k:"double",n:"二迴旋"}];
+var EVENTS=[
+  {k:"run",n:"跑步跳",w:0.09},
+  {k:"split",n:"開叉跳",w:0.2},
+  {k:"side",n:"體側跳",w:0.37},
+  {k:"double",n:"二迴旋",w:0.17}
+];
 var EVK=EVENTS.map(function(e){return e.k;});
+var WEIGHTS={run:0.09,split:0.2,side:0.37,double:0.17};
 var TEAM={M:"男生",F:"女生"};
 var PICK=5;
 var TABS=["record","rank","pk","roster"];
 
-var ui={tab:"record",event:"run",filter:"all",rankView:"run",rankMode:"split",pk:1,reveal:false,revealed:new Set(),confirmDel:null,confirmClear:false,busy:false};
+function todayStr(){
+  var d=new Date();
+  var m=String(d.getMonth()+1).padStart(2,"0");
+  var day=String(d.getDate()).padStart(2,"0");
+  return d.getFullYear()+"-"+m+"-"+day;
+}
+
+var TODAY=todayStr();
+var ui={
+  tab:"record",
+  event:"run",
+  filter:"all",
+  recDate:TODAY,
+  basis:"best", // "best" | "date"
+  basisDate:TODAY,
+  rankView:"run", // "run"|"split"|"side"|"double"|"weighted"|"all"
+  rankMode:"split",
+  weightEvs:["run","split","side","double"],
+  pk:1,
+  reveal:false,
+  revealed:new Set(),
+  confirmDel:null,
+  confirmClear:false,
+  busy:false
+};
+
 var students=[], snapshotRows=[], ready=false, mode="loading", canWrite=true, adapter=null;
 var pending={}, sending={}, chains={}, timers={}, status={}, statusTimers={}, dirty={};
 var recKey="", rosKey="", focusAfter=null;
@@ -494,10 +565,19 @@ try{reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function isNum(v){return typeof v==="number"&&isFinite(v);}
-function evName(k){for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].k===k)return EVENTS[i].n;}return k;}
+function evName(k){
+  if(k==="weighted")return "加權綜合";
+  for(var i=0;i<EVENTS.length;i++){if(EVENTS[i].k===k)return EVENTS[i].n;}
+  return k;
+}
 function nameOf(s){return (s.name&&s.name.trim())?s.name.trim():(s.no+"號");}
 function emptyScores(){var o={};EVK.forEach(function(k){o[k]=null;});return o;}
 function bySeat(a,b){return (a.no-b.no)||(a.id<b.id?-1:a.id>b.id?1:0);}
+function round2(n){return Math.round((n+Number.EPSILON)*100)/100;}
+function fmtScore(n,isWeighted){
+  if(!isNum(n))return "—";
+  return isWeighted?round2(n).toFixed(2).replace(/\.00$/,""):String(n);
+}
 
 function loadPrefs(){
   try{
@@ -505,8 +585,15 @@ function loadPrefs(){
     if(TABS.indexOf(p.tab)>=0)ui.tab=p.tab;
     if(EVK.indexOf(p.event)>=0)ui.event=p.event;
     if(["all","M","F"].indexOf(p.filter)>=0)ui.filter=p.filter;
-    if(EVK.indexOf(p.rankView)>=0||p.rankView==="all")ui.rankView=p.rankView;
+    if(typeof p.recDate==="string"&&/^\d{4}-\d{2}-\d{2}$/.test(p.recDate))ui.recDate=p.recDate;
+    if(["best","date"].indexOf(p.basis)>=0)ui.basis=p.basis;
+    if(typeof p.basisDate==="string"&&(/^\d{4}-\d{2}-\d{2}$/.test(p.basisDate)||p.basisDate==="legacy"))ui.basisDate=p.basisDate;
+    if(EVK.indexOf(p.rankView)>=0||p.rankView==="all"||p.rankView==="weighted")ui.rankView=p.rankView;
     if(["split","mixed","vs"].indexOf(p.rankMode)>=0)ui.rankMode=p.rankMode;
+    if(Array.isArray(p.weightEvs)){
+      var we=p.weightEvs.filter(function(k){return EVK.indexOf(k)>=0;});
+      if(we.length)ui.weightEvs=we;
+    }
     if([1,2,3,4,5,"sum"].indexOf(p.pk)>=0)ui.pk=p.pk;
     ui.reveal=!!p.reveal;
   }catch(e){}
@@ -514,7 +601,27 @@ function loadPrefs(){
   if(TABS.indexOf(h)>=0)ui.tab=h;
 }
 function savePrefs(){
-  try{localStorage.setItem("jumprope.prefs",JSON.stringify({tab:ui.tab,event:ui.event,filter:ui.filter,rankView:ui.rankView,rankMode:ui.rankMode,pk:ui.pk,reveal:ui.reveal}));}catch(e){}
+  try{
+    localStorage.setItem("jumprope.prefs",JSON.stringify({
+      tab:ui.tab,event:ui.event,filter:ui.filter,
+      recDate:ui.recDate,basis:ui.basis,basisDate:ui.basisDate,
+      rankView:ui.rankView,rankMode:ui.rankMode,weightEvs:ui.weightEvs,
+      pk:ui.pk,reveal:ui.reveal
+    }));
+  }catch(e){}
+}
+
+function mergeScoresByDate(target,src){
+  if(!src)return;
+  for(var dt in src){
+    if(!target[dt])target[dt]={};
+    var dayObj=src[dt]||{};
+    for(var k in dayObj){
+      if(EVK.indexOf(k)>=0){
+        target[dt][k]=isNum(dayObj[k])?dayObj[k]:null;
+      }
+    }
+  }
 }
 
 function applyPatch(s,p){
@@ -522,38 +629,188 @@ function applyPatch(s,p){
   if("name" in p)s.name=p.name;
   if("no" in p)s.no=p.no;
   if("gender" in p)s.gender=p.gender;
-  if(p.scores){for(var k in p.scores){if(EVK.indexOf(k)>=0)s.scores[k]=p.scores[k];}}
+  if(p.scores){
+    if(!s.scoresByDate.legacy)s.scoresByDate.legacy={};
+    for(var k in p.scores){
+      if(EVK.indexOf(k)>=0){
+        s.scores[k]=p.scores[k];
+        s.scoresByDate.legacy[k]=p.scores[k];
+      }
+    }
+  }
+  if(p.scoresByDate){
+    mergeScoresByDate(s.scoresByDate,p.scoresByDate);
+  }
 }
+
 function normalize(id,d){
-  d=d||{};var sc=d.scores||{};
-  var s={id:id,no:isNum(d.no)?d.no:0,name:typeof d.name==="string"?d.name:"",gender:d.gender==="F"?"F":"M",scores:{}};
-  EVK.forEach(function(k){s.scores[k]=isNum(sc[k])?sc[k]:null;});
-  applyPatch(s,sending[id]);applyPatch(s,pending[id]);
+  d=d||{};
+  var sc=d.scores||{};
+  var sbd=d.scoresByDate||{};
+  var s={
+    id:id,
+    no:isNum(d.no)?d.no:0,
+    name:typeof d.name==="string"?d.name:"",
+    gender:d.gender==="F"?"F":"M",
+    scores:{},
+    scoresByDate:{}
+  };
+  var hasLegacy=false;
+  EVK.forEach(function(k){
+    var v=isNum(sc[k])?sc[k]:null;
+    s.scores[k]=v;
+    if(v!==null)hasLegacy=true;
+  });
+  if(hasLegacy){
+    s.scoresByDate.legacy={};
+    EVK.forEach(function(k){s.scoresByDate.legacy[k]=s.scores[k];});
+  }
+  mergeScoresByDate(s.scoresByDate,sbd);
+  applyPatch(s,sending[id]);
+  applyPatch(s,pending[id]);
   return s;
 }
 function rebuildStudents(){students=snapshotRows.map(function(r){return normalize(r.id,r.data);});}
 
+// 取得所有已紀錄的日期清單（由新到舊）
+function getRecordedDates(){
+  var set=new Set();
+  students.forEach(function(s){
+    for(var dt in s.scoresByDate){
+      var dayObj=s.scoresByDate[dt];
+      if(dayObj&&EVK.some(function(k){return isNum(dayObj[k]);})){
+        set.add(dt);
+      }
+    }
+  });
+  var arr=Array.from(set);
+  arr.sort(function(a,b){
+    if(a==="legacy")return 1;
+    if(b==="legacy")return -1;
+    return b.localeCompare(a);
+  });
+  return arr;
+}
+
+// 取得某生在特定日期的單項成績
+function getScoreOnDate(s,ev,dt){
+  var dayObj=s.scoresByDate&&s.scoresByDate[dt];
+  if(dayObj&&isNum(dayObj[ev]))return dayObj[ev];
+  return null;
+}
+
+// 取得某生在某項目的歷史最高成績與締造日期
+function getBestInfo(s,ev){
+  var max=null, bestDt=null;
+  if(s.scoresByDate){
+    var dates=Object.keys(s.scoresByDate).sort();
+    dates.forEach(function(dt){
+      var v=s.scoresByDate[dt]&&s.scoresByDate[dt][ev];
+      if(isNum(v)&&(max===null||v>max)){
+        max=v;
+        bestDt=dt;
+      }
+    });
+  }
+  return {score:max,date:bestDt};
+}
+
+function getBestScore(s,ev){
+  return getBestInfo(s,ev).score;
+}
+
+// 依據目前設定的採計基準（歷史最高 or 指定日期）取得單項成績
+function getActiveEventScore(s,ev){
+  if(ui.basis==="date"){
+    return getScoreOnDate(s,ev,ui.basisDate);
+  }
+  return getBestScore(s,ev);
+}
+
+// 取得成績（支援單項或 "weighted" 加權綜合）
+function getScoreForView(s,evOrWeighted){
+  if(evOrWeighted==="weighted"){
+    if(!ui.weightEvs.length)return null;
+    var sum=0, hasAny=false;
+    ui.weightEvs.forEach(function(k){
+      var v=getActiveEventScore(s,k);
+      if(isNum(v)){
+        hasAny=true;
+        sum+=v*(WEIGHTS[k]||0);
+      }
+    });
+    return hasAny?round2(sum):null;
+  }
+  return getActiveEventScore(s,evOrWeighted);
+}
+
+// 取得加權綜合的各項目明細字串
+function getWeightedDetail(s){
+  return ui.weightEvs.map(function(k){
+    var v=getActiveEventScore(s,k);
+    var w=WEIGHTS[k];
+    if(isNum(v)){
+      return evName(k)+" "+v+" (+"+round2(v*w)+")";
+    }
+    return evName(k)+" 未測";
+  }).join(" · ");
+}
+
 function ranking(ev,g){
   var pool=students.filter(function(s){return s.gender===g;});
-  var tested=pool.filter(function(s){return isNum(s.scores[ev]);}).sort(function(a,b){return (b.scores[ev]-a.scores[ev])||bySeat(a,b);});
+  var tested=pool.filter(function(s){return isNum(getScoreForView(s,ev));}).sort(function(a,b){
+    return (getScoreForView(b,ev)-getScoreForView(a,ev))||bySeat(a,b);
+  });
   var rows=tested.map(function(s){
-    var better=0;tested.forEach(function(t){if(t.scores[ev]>s.scores[ev])better++;});
-    return {s:s,score:s.scores[ev],rank:better+1};
+    var sc=getScoreForView(s,ev);
+    var better=0;
+    tested.forEach(function(t){if(getScoreForView(t,ev)>sc)better++;});
+    return {s:s,score:sc,rank:better+1};
   });
   var inPick=rows.filter(function(r){return r.rank<=PICK;});
   var cutTie=inPick.length>PICK;
   var tieRank=cutTie?inPick[inPick.length-1].rank:null;
   var seatsLeft=cutTie?PICK-rows.filter(function(r){return r.rank<tieRank;}).length:0;
-  var untested=pool.filter(function(s){return !isNum(s.scores[ev]);}).sort(bySeat);
+  var untested=pool.filter(function(s){return !isNum(getScoreForView(s,ev));}).sort(bySeat);
   return {rows:rows,untested:untested,cutTie:cutTie,tieRank:tieRank,seatsLeft:seatsLeft,total:pool.length,picked:Math.min(inPick.length,PICK)};
+}
+
+// 紀錄頁面專用的即時當日排名
+function rankingOnRecDate(ev,g){
+  var pool=students.filter(function(s){return s.gender===g;});
+  var tested=pool.filter(function(s){return isNum(getScoreOnDate(s,ev,ui.recDate));}).sort(function(a,b){
+    return (getScoreOnDate(b,ev,ui.recDate)-getScoreOnDate(a,ev,ui.recDate))||bySeat(a,b);
+  });
+  var rows=tested.map(function(s){
+    var sc=getScoreOnDate(s,ev,ui.recDate);
+    var better=0;
+    tested.forEach(function(t){if(getScoreOnDate(t,ev,ui.recDate)>sc)better++;});
+    return {s:s,score:sc,rank:better+1};
+  });
+  var inPick=rows.filter(function(r){return r.rank<=PICK;});
+  var cutTie=inPick.length>PICK;
+  var tieRank=cutTie?inPick[inPick.length-1].rank:null;
+  var untested=pool.filter(function(s){return !isNum(getScoreOnDate(s,ev,ui.recDate));}).sort(bySeat);
+  return {rows:rows,untested:untested,cutTie:cutTie,tieRank:tieRank,total:pool.length,picked:Math.min(inPick.length,PICK)};
 }
 
 function mergePatch(a,b){
   var o={};var k;
   if(a){for(k in a)o[k]=a[k];}
   for(k in b){
-    if(k==="scores"){var sc={};var j;if(o.scores){for(j in o.scores)sc[j]=o.scores[j];}for(j in b.scores)sc[j]=b.scores[j];o.scores=sc;}
-    else o[k]=b[k];
+    if(k==="scores"){
+      var sc={};var j;
+      if(o.scores){for(j in o.scores)sc[j]=o.scores[j];}
+      for(j in b.scores)sc[j]=b.scores[j];
+      o.scores=sc;
+    }else if(k==="scoresByDate"){
+      var sbd={};
+      if(o.scoresByDate)mergeScoresByDate(sbd,o.scoresByDate);
+      mergeScoresByDate(sbd,b.scoresByDate);
+      o.scoresByDate=sbd;
+    }else{
+      o[k]=b[k];
+    }
   }
   return o;
 }
@@ -614,18 +871,83 @@ function loadingHTML(){return '<div class="state"><p>正在讀取雲端資料…
 function emptyRosterHTML(){
   return '<div class="state"><h3>還沒有學生名單</h3><p>先到「名單」建立全班同學，就可以開始輸入跳繩次數。</p><button type="button" class="btn primary" data-goto="roster">前往名單</button></div>';
 }
-function eventChips(selected,withAll){
+
+function fmtDateLabel(dt){
+  if(dt==="legacy")return "早期紀錄";
+  if(dt===TODAY)return dt+" (今天)";
+  return dt;
+}
+
+function renderDatePills(containerId,activeDate,attrName){
+  var el=$(containerId);
+  if(!el)return;
+  var dates=getRecordedDates();
+  if(dates.indexOf(TODAY)<0&&attrName==="data-recdate"){
+    dates.unshift(TODAY);
+  }
+  if(!dates.length){
+    el.innerHTML='<span class="date-pills-label">尚無歷史日期紀錄</span>';
+    return;
+  }
+  el.innerHTML='<span class="date-pills-label">已紀錄日期：</span>'+dates.map(function(dt){
+    var act=dt===activeDate?" active":"";
+    return '<button type="button" class="dpill'+act+'" '+attrName+'="'+esc(dt)+'">'+esc(fmtDateLabel(dt))+'</button>';
+  }).join("");
+}
+
+function basisBarHTML(){
+  var dates=getRecordedDates();
+  var pills="";
+  if(ui.basis==="date"){
+    var list=dates.slice();
+    if(list.indexOf(ui.basisDate)<0&&ui.basisDate!=="legacy")list.unshift(ui.basisDate);
+    pills='<label class="date-picker-wrap"><span>選擇日期</span><input type="date" class="date-in" data-basis-input="1" value="'+(ui.basisDate==="legacy"?TODAY:esc(ui.basisDate))+'"></label>'+
+      '<div class="date-pills">'+
+      (list.length?'<span class="date-pills-label">快速切換：</span>'+list.map(function(dt){
+        return '<button type="button" class="dpill'+(dt===ui.basisDate?" active":"")+'" data-basis-date="'+esc(dt)+'">'+esc(fmtDateLabel(dt))+'</button>';
+      }).join(""):'<span class="date-pills-label">此日期尚無紀錄</span>')+
+      '</div>';
+  }else{
+    pills='<span class="basis-info">自動採計每位選手在所有日期中的單項最高分（共 '+dates.length+' 個紀錄日）</span>';
+  }
+  return '<span class="basis-label">採計基準</span>'+
+    '<div class="seg" role="group" aria-label="成績採計基準">'+
+      '<button type="button" data-basis="best" aria-pressed="'+(ui.basis==="best")+'">🌟 各項歷史最高</button>'+
+      '<button type="button" data-basis="date" aria-pressed="'+(ui.basis==="date")+'">📅 指定日期</button>'+
+    '</div>'+pills;
+}
+
+function eventChips(selected,forRank){
   var n=students.length;
   var html=EVENTS.map(function(e){
-    var t=students.filter(function(s){return isNum(s.scores[e.k]);}).length;
+    var t=students.filter(function(s){
+      return isNum(forRank?getActiveEventScore(s,e.k):getScoreOnDate(s,e.k,ui.recDate));
+    }).length;
     return '<button type="button" class="ev" data-ev="'+e.k+'" aria-pressed="'+(selected===e.k)+'"><span class="ev-name">'+e.n+'</span><span class="ev-meta">已測 '+t+' / '+n+'</span><span class="ev-bar"><i style="width:'+(n?Math.round(t/n*100):0)+'%"></i></span></button>';
   }).join("");
-  if(withAll){
+  if(forRank){
+    var wt=students.filter(function(s){return isNum(getScoreForView(s,"weighted"));}).length;
+    html+='<button type="button" class="ev" data-ev="weighted" aria-pressed="'+(selected==="weighted")+'"><span class="ev-name">⚖️ 加權綜合</span><span class="ev-meta">已計 '+wt+' / '+n+' ('+ui.weightEvs.length+'項)</span><span class="ev-bar"><i style="width:'+(n?Math.round(wt/n*100):0)+'%"></i></span></button>';
     var full=0;
     EVENTS.forEach(function(e){["M","F"].forEach(function(g){if(ranking(e.k,g).picked===PICK)full++;});});
     html+='<button type="button" class="ev" data-ev="all" aria-pressed="'+(selected==="all")+'"><span class="ev-name">選手總表</span><span class="ev-meta">已選滿 '+full+' / 8 組</span><span class="ev-bar"><i style="width:'+Math.round(full/8*100)+'%"></i></span></button>';
   }
   return html;
+}
+
+function weightBoxHTML(){
+  var checks=EVENTS.map(function(e){
+    var on=ui.weightEvs.indexOf(e.k)>=0;
+    return '<button type="button" class="wcheck" data-wev="'+e.k+'" aria-pressed="'+on+'">'+
+      '<span class="wcheck-left"><span class="wbox-ind">✓</span><span>'+e.n+'</span></span>'+
+      '<span class="wbadge">×'+e.w+'</span>'+
+    '</button>';
+  }).join("");
+  var formula=ui.weightEvs.map(function(k){return evName(k)+"×"+WEIGHTS[k];}).join(" ＋ ");
+  return '<div class="weight-box">'+
+    '<div class="weight-head"><h3>動態加權項目設定（點擊勾選要納入計算的比賽項目）</h3><span class="hint">目前公式：'+(formula||"請至少勾選一項")+'</span></div>'+
+    '<div class="weight-checks">'+checks+'</div>'+
+  '</div>';
 }
 
 function renderChrome(){
@@ -639,18 +961,21 @@ function renderChrome(){
 }
 
 function renderRecord(){
+  var dateIn=$("#rec-date");
+  if(dateIn&&dateIn.value!==ui.recDate)dateIn.value=ui.recDate;
+  renderDatePills("#rec-date-pills",ui.recDate,"data-recdate");
   $("#rec-events").innerHTML=eventChips(ui.event,false);
   document.querySelectorAll("#rec-filter button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.f===ui.filter));});
   var list=$("#rec-list");
   if(!ready){list.innerHTML=loadingHTML();recKey="";return;}
   if(!students.length){list.innerHTML=emptyRosterHTML();recKey="";return;}
-  var key=[ui.event,ui.filter,canWrite,students.slice().sort(bySeat).map(function(s){return s.id+":"+s.no+":"+s.gender+":"+s.name;}).join("|")].join("#");
+  var key=[ui.recDate,ui.event,ui.filter,canWrite,students.slice().sort(bySeat).map(function(s){return s.id+":"+s.no+":"+s.gender+":"+s.name;}).join("|")].join("#");
   if(key!==recKey){recKey=key;rebuildRecord(list);}else patchRecord();
 }
 function recRankMaps(){
   var maps={};
   ["M","F"].forEach(function(g){
-    var R=ranking(ui.event,g);var m={};
+    var R=rankingOnRecDate(ui.event,g);var m={};
     R.rows.forEach(function(r){m[r.s.id]={rank:r.rank,sel:r.rank<=PICK,tie:R.cutTie&&r.rank===R.tieRank};});
     maps[g]={map:m,R:R};
   });
@@ -658,7 +983,14 @@ function recRankMaps(){
 }
 function rkText(info){
   if(!info)return "";
-  return "第 "+info.rank+" 名"+(info.tie?"・同分":"");
+  return "當日第 "+info.rank+" 名"+(info.tie?"・同分":"");
+}
+function bestHintInfo(s,curVal){
+  var b=getBestInfo(s,ui.event);
+  if(!isNum(b.score))return {text:"歷史最高：尚未紀錄",pr:false};
+  var isPr=isNum(curVal)&&curVal>=b.score&&curVal>0;
+  var txt="歷史最高："+b.score+" 次"+(isPr?" 🔥 最高紀錄！":"");
+  return {text:txt,pr:isPr};
 }
 function laneMeta(g,R){return "已測 "+(R.total-R.untested.length)+" / "+R.total+"・選手 "+R.picked+" / "+PICK;}
 function rebuildRecord(list){
@@ -672,10 +1004,15 @@ function rebuildRecord(list){
     html+='<section class="lane '+(g==="M"?"b":"g")+'"><div class="lane-head"><h3><span class="sw"></span>'+TEAM[g]+'</h3><span class="lane-meta" data-lanemeta="'+g+'">'+laneMeta(g,maps[g].R)+'</span></div>';
     if(!pool.length)html+='<p class="lane-empty">名單裡還沒有'+TEAM[g]+'。</p>';
     pool.forEach(function(s){
-      var v=s.scores[ui.event];var info=maps[g].map[s.id];
+      var v=getScoreOnDate(s,ui.event,ui.recDate);
+      var info=maps[g].map[s.id];
+      var bh=bestHintInfo(s,v);
       html+='<div class="row '+(g==="M"?"b":"g")+'">'+
         '<span class="seat">'+s.no+'</span>'+
-        '<span class="nm'+(s.name.trim()?'':' empty')+'">'+(s.name.trim()?esc(s.name.trim()):'未填姓名')+'</span>'+
+        '<div class="nm-wrap">'+
+          '<span class="nm'+(s.name.trim()?'':' empty')+'">'+(s.name.trim()?esc(s.name.trim()):'未填姓名')+'</span>'+
+          '<span class="best-hint'+(bh.pr?' is-pr':'')+'" data-bh="'+s.id+'">'+esc(bh.text)+'</span>'+
+        '</div>'+
         '<span class="rk'+(info&&info.sel?' sel':'')+'" data-rk="'+s.id+'">'+rkText(info)+'</span>'+
         '<label class="cnt"><span class="sr">'+esc(nameOf(s))+' '+evName(ui.event)+' 次數</span>'+
         '<input id="in-'+s.id+'" class="cnt-in" data-sid="'+s.id+'" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" enterkeyhint="next" autocomplete="off" placeholder="—" value="'+(isNum(v)?v:"")+'"'+(canWrite?'':' disabled')+'>'+
@@ -691,20 +1028,37 @@ function rebuildRecord(list){
 function patchRecord(){
   var maps=recRankMaps();
   students.forEach(function(s){
+    var v=getScoreOnDate(s,ui.event,ui.recDate);
     var inp=document.getElementById("in-"+s.id);
     if(inp&&inp!==document.activeElement&&!dirty[s.id]){
-      var v=s.scores[ui.event];var t=isNum(v)?String(v):"";
+      var t=isNum(v)?String(v):"";
       if(inp.value!==t)inp.value=t;
     }
     var rk=document.querySelector('[data-rk="'+s.id+'"]');
     if(rk){var info=maps[s.gender].map[s.id];rk.textContent=rkText(info);rk.className="rk"+(info&&info.sel?" sel":"");}
+    var bhEl=document.querySelector('[data-bh="'+s.id+'"]');
+    if(bhEl){
+      var bh=bestHintInfo(s,v);
+      bhEl.textContent=bh.text;
+      bhEl.className="best-hint"+(bh.pr?" is-pr":"");
+    }
   });
   ["M","F"].forEach(function(g){var el=document.querySelector('[data-lanemeta="'+g+'"]');if(el)el.textContent=laneMeta(g,maps[g].R);});
+  renderDatePills("#rec-date-pills",ui.recDate,"data-recdate");
 }
 
 var RANK_HINT={split:"男生、女生各自排名，前 5 名是選手。",mixed:"全班男女一起排，選手仍是男女各取前 5 名。",vs:"第 1 名比第 1 名、第 2 名比第 2 名，一路比到最後一名。"};
 function renderRank(){
+  $("#rank-basis").innerHTML=basisBarHTML();
   $("#rank-events").innerHTML=eventChips(ui.rankView,true);
+  var wbox=$("#rank-weights");
+  if(ui.rankView==="weighted"){
+    wbox.hidden=false;
+    wbox.innerHTML=weightBoxHTML();
+  }else{
+    wbox.hidden=true;
+    wbox.innerHTML="";
+  }
   $("#rank-tools").hidden=(ui.rankView==="all");
   document.querySelectorAll("#rank-mode button").forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.m===ui.rankMode));});
   $("#rank-mode-hint").textContent=RANK_HINT[ui.rankMode];
@@ -723,13 +1077,16 @@ function genderRankMap(ev){
   return m;
 }
 function mixedHTML(ev){
-  var tested=students.filter(function(s){return isNum(s.scores[ev]);}).sort(function(a,b){return (b.scores[ev]-a.scores[ev])||bySeat(a,b);});
-  var untested=students.filter(function(s){return !isNum(s.scores[ev]);}).sort(bySeat);
-  var max=1;tested.forEach(function(s){if(s.scores[ev]>max)max=s.scores[ev];});
+  var isW=(ev==="weighted");
+  var unit=isW?"分":"次";
+  var tested=students.filter(function(s){return isNum(getScoreForView(s,ev));}).sort(function(a,b){return (getScoreForView(b,ev)-getScoreForView(a,ev))||bySeat(a,b);});
+  var untested=students.filter(function(s){return !isNum(getScoreForView(s,ev));}).sort(bySeat);
+  var max=1;tested.forEach(function(s){var v=getScoreForView(s,ev);if(v>max)max=v;});
   var gm=genderRankMap(ev);
   var rows=tested.map(function(s){
-    var better=0;tested.forEach(function(t){if(t.scores[ev]>s.scores[ev])better++;});
-    return {s:s,score:s.scores[ev],rank:better+1};
+    var sc=getScoreForView(s,ev);
+    var better=0;tested.forEach(function(t){if(getScoreForView(t,ev)>sc)better++;});
+    return {s:s,score:sc,rank:better+1};
   });
   var top=rows.filter(function(r){return r.rank<=10;});
   var topM=top.filter(function(r){return r.s.gender==="M";}).length;
@@ -737,16 +1094,18 @@ function mixedHTML(ev){
   if(rows.length){
     html+='<p class="lane-note soft">全班前 10 名裡：男生 '+topM+' 人、女生 '+(top.length-topM)+' 人</p>';
   }else{
-    html+='<p class="lane-empty">還沒有'+evName(ev)+'的成績。</p>';
+    html+='<p class="lane-empty">目前採計基準下還沒有'+evName(ev)+'的成績。</p>';
   }
   rows.forEach(function(r){
     var s=r.s,gi=gm[s.id]||{},g=s.gender==="M"?"b":"g";
     var nm=s.name.trim();
+    var det=isW?'<div class="rr-detail">'+esc(getWeightedDetail(s))+'</div>':'';
     html+='<div class="rr mx '+g+'">'+
       '<span class="medal '+(r.rank<=3?"m"+r.rank:"")+'">'+r.rank+'</span>'+
       '<div class="rr-main"><div class="rr-name"><span class="gchip">'+(s.gender==="M"?"男":"女")+'</span><span class="t">'+esc(nameOf(s))+'</span>'+(nm?'<span class="rr-seat">'+s.no+'號</span>':'')+(gi.sel&&!gi.tie?'<span class="tag">選手</span>':'')+(gi.tie?'<span class="tag warn">同分加賽</span>':'')+'</div>'+
+      det+
       '<div class="bar"><i style="width:'+Math.max(2,Math.round(r.score/max*100))+'%"></i></div></div>'+
-      '<div class="score-col"><span class="score">'+r.score+'<small>次</small></span><span class="sub">'+TEAM[s.gender]+'第 '+gi.rank+' 名</span></div>'+
+      '<div class="score-col"><span class="score">'+fmtScore(r.score,isW)+'<small>'+unit+'</small></span><span class="sub">'+TEAM[s.gender]+'第 '+gi.rank+' 名</span></div>'+
     '</div>';
   });
   if(untested.length){
@@ -755,10 +1114,12 @@ function mixedHTML(ev){
   return html+'</section>';
 }
 function vsHTML(ev){
+  var isW=(ev==="weighted");
+  var unit=isW?"分":"次";
   var B=ranking(ev,"M"),G=ranking(ev,"F");
   var n=Math.max(B.rows.length,G.rows.length);
   if(!n){
-    return '<div class="state wide-col"><h3>還沒有'+evName(ev)+'的成績</h3><p>到「紀錄」輸入次數後，這裡會把男生和女生同名次的同學放在一起比。</p><button type="button" class="btn primary" data-goto="record">去輸入成績</button></div>';
+    return '<div class="state wide-col"><h3>還沒有'+evName(ev)+'的成績</h3><p>切換其他採計日期或到「紀錄」輸入次數後，這裡會把男生和女生同名次的同學放在一起比。</p><button type="button" class="btn primary" data-goto="record">去輸入成績</button></div>';
   }
   var bw=0,gw=0,tw=0,list="";
   for(var i=0;i<n;i++){
@@ -769,15 +1130,15 @@ function vsHTML(ev){
     var pos=i+1;
     var pct=(v==="na")?null:((b.score+g.score)?Math.round(b.score/(b.score+g.score)*1000)/10:50);
     list+='<div class="vs-row v-'+v+'">'+
-      vsSide(b,"M",v,pos)+
+      vsSide(b,"M",v,pos,isW)+
       '<span class="vs-pos'+(pos<=3?" m"+pos:"")+(v==="tie"?" tie":"")+'" title="'+(v==="tie"?"平手":"")+'">'+pos+'</span>'+
-      vsSide(g,"F",v,pos)+
-      (pct==null?'':'<div class="vs-bar" role="img" aria-label="第 '+pos+' 名：男生 '+b.score+' 次，女生 '+g.score+' 次"><span class="bb" style="width:'+pct+'%"></span><span class="gg"></span></div>')+
+      vsSide(g,"F",v,pos,isW)+
+      (pct==null?'':'<div class="vs-bar" role="img" aria-label="第 '+pos+' 名：男生 '+fmtScore(b.score,isW)+' '+unit+'，女生 '+fmtScore(g.score,isW)+' '+unit+'"><span class="bb" style="width:'+pct+'%"></span><span class="gg"></span></div>')+
     '</div>';
   }
-  function avg(R){if(!R.rows.length)return null;var t=0;R.rows.forEach(function(r){t+=r.score;});return Math.round(t/R.rows.length*10)/10;}
+  function avg(R){if(!R.rows.length)return null;var t=0;R.rows.forEach(function(r){t+=r.score;});return round2(t/R.rows.length);}
   var ab=avg(B),ag=avg(G);
-  var foot='<span>平均：男生 '+(ab==null?"—":ab+" 次")+'（'+B.rows.length+' 人）・女生 '+(ag==null?"—":ag+" 次")+'（'+G.rows.length+' 人）</span>';
+  var foot='<span>平均：男生 '+(ab==null?"—":ab+" "+unit)+'（'+B.rows.length+' 人）・女生 '+(ag==null?"—":ag+" "+unit)+'（'+G.rows.length+' 人）</span>';
   if(B.rows.length!==G.rows.length){
     var fewer=B.rows.length<G.rows.length?"男生":"女生",k=Math.min(B.rows.length,G.rows.length);
     foot+='<span>'+fewer+'目前只有 '+k+' 人有成績，第 '+(k+1)+' 名之後只列出一隊，不算勝負。</span>';
@@ -801,18 +1162,22 @@ function vsHTML(ev){
   }
   return html+'</section></div>';
 }
-function vsSide(r,g,v,pos){
+function vsSide(r,g,v,pos,isW){
   var side=g==="M"?"b":"g";
   if(!r)return '<div class="vs-side '+side+' none">'+(g==="M"?"男生":"女生")+'沒有第 '+pos+' 名</div>';
   var win=(v==="b"&&g==="M")||(v==="g"&&g==="F");
   var lose=(v==="b"&&g==="F")||(v==="g"&&g==="M");
-  var note=r.rank!==pos?'<span class="vs-note">同分第 '+r.rank+' 名</span>':(r.s.name.trim()?'<span class="vs-note">'+r.s.no+'號</span>':'');
+  var noteText=r.rank!==pos?('同分第 '+r.rank+' 名'):(r.s.name.trim()?r.s.no+'號':'');
+  if(isW)noteText=(noteText?noteText+" · ":"")+getWeightedDetail(r.s);
+  var note=noteText?'<span class="vs-note">'+esc(noteText)+'</span>':'';
   var who='<span class="vs-who"><span class="vs-name">'+esc(nameOf(r.s))+'</span>'+note+'</span>';
-  var num='<span class="vs-num">'+(win&&g==="F"?CROWN:'')+r.score+(win&&g==="M"?CROWN:'')+'</span>';
+  var num='<span class="vs-num">'+(win&&g==="F"?CROWN:'')+fmtScore(r.score,isW)+(win&&g==="M"?CROWN:'')+'</span>';
   return '<div class="vs-side '+side+(win?" win":"")+(lose?" lose":"")+'">'+(g==="M"?who+num:num+who)+'</div>';
 }
 function rankLanesHTML(ev){
-  var max=1;students.forEach(function(s){if(isNum(s.scores[ev])&&s.scores[ev]>max)max=s.scores[ev];});
+  var isW=(ev==="weighted");
+  var unit=isW?"分":"次";
+  var max=1;students.forEach(function(s){var v=getScoreForView(s,ev);if(isNum(v)&&v>max)max=v;});
   var html='<div class="lanes">';
   ["M","F"].forEach(function(g){
     var R=ranking(ev,g);
@@ -831,11 +1196,13 @@ function rankLanesHTML(ev){
       var tie=R.cutTie&&r.rank===R.tieRank;
       var medal=r.rank<=3?"m"+r.rank:(sel?"in":"");
       var nm=r.s.name.trim();
+      var det=isW?'<div class="rr-detail">'+esc(getWeightedDetail(r.s))+'</div>':'';
       html+='<div class="rr'+(sel?'':' out')+'">'+
         '<span class="medal '+medal+'">'+r.rank+'</span>'+
         '<div class="rr-main"><div class="rr-name"><span class="t">'+esc(nameOf(r.s))+'</span>'+(nm?'<span class="rr-seat">'+r.s.no+'號</span>':'')+(sel&&!tie?'<span class="tag">選手</span>':'')+(tie?'<span class="tag warn">同分加賽</span>':'')+'</div>'+
+        det+
         '<div class="bar"><i style="width:'+Math.max(2,Math.round(r.score/max*100))+'%"></i></div></div>'+
-        '<span class="score">'+r.score+'<small>次</small></span>'+
+        '<span class="score">'+fmtScore(r.score,isW)+'<small>'+unit+'</small></span>'+
       '</div>';
     });
     if(R.untested.length){
@@ -894,6 +1261,7 @@ function pkData(ev){
 function verdict(d){if(d.bv==null||d.gv==null)return "wait";return d.bv>d.gv?"b":d.gv>d.bv?"g":"tie";}
 var CROWN='<svg class="crown" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 15 L3.6 4.2 L8.6 8.6 L12 1.5 L15.4 8.6 L20.4 4.2 L22 15 Z"/></svg>';
 function renderPK(anim){
+  $("#pk-basis").innerHTML=basisBarHTML();
   $("#pk-modes").innerHTML=PK_MODES.map(function(m){return '<button type="button" class="mode" data-pk="'+m+'" aria-pressed="'+(ui.pk===m)+'">'+(m==="sum"?"前五合計":"第"+m+"名")+'</button>';}).join("");
   $("#reveal-toggle").checked=ui.reveal;
   $("#reveal-reset").hidden=!(ui.reveal&&ui.revealed.size);
@@ -921,7 +1289,7 @@ function resultLine(bw,gw,tw,shown,decided,results){
   var allDecided=results.every(function(r){return r.v!=="wait";});
   var txt="",cls="";
   if(ui.reveal&&shown===0){txt=allDecided?"點每一項的「揭曉結果」開始公布。":"有些項目還沒有成績，先揭曉已經測完的項目。";}
-  else if(decided===0){txt="還沒有可以比的成績，先到「紀錄」輸入次數。";}
+  else if(decided===0){txt="目前採計基準下還沒有可以比的成績。";}
   else if(shown===4&&decided===4){
     if(bw>gw){txt="男生隊以 "+bw+" 比 "+gw+" 獲勝！";cls="b";}
     else if(gw>bw){txt="女生隊以 "+gw+" 比 "+bw+" 獲勝！";cls="g";}
@@ -1021,7 +1389,7 @@ function rebuildRoster(body){
   if(canWrite){
     html+='<div class="ros-actions"><button type="button" class="btn" data-add="M">＋ 新增男生</button><button type="button" class="btn" data-add="F">＋ 新增女生</button><span class="grow"></span>'+
       (ui.confirmClear?
-        '<span class="hint">確定清除全班四個項目的成績？</span><button type="button" class="btn small danger fill" id="clear-yes"'+(ui.busy?' disabled':'')+'>'+(ui.busy?"清除中…":"清除")+'</button><button type="button" class="btn small" id="clear-no">取消</button>'
+        '<span class="hint">確定清除全班所有日期與四個項目的成績？</span><button type="button" class="btn small danger fill" id="clear-yes"'+(ui.busy?' disabled':'')+'>'+(ui.busy?"清除中…":"清除")+'</button><button type="button" class="btn small" id="clear-no">取消</button>'
         :'<button type="button" class="btn danger" id="clear-ask">清除所有成績</button>')+
     '</div>';
   }
@@ -1053,6 +1421,37 @@ function setTab(t){
   window.scrollTo(0,0);
 }
 
+function handleBasisClick(e){
+  var bBasis=e.target.closest("[data-basis]");
+  if(bBasis){
+    ui.basis=bBasis.dataset.basis;
+    if(ui.basis==="date"&&!ui.basisDate){
+      var dts=getRecordedDates();
+      ui.basisDate=dts.length?dts[0]:ui.recDate;
+    }
+    savePrefs();
+    renderAll(ui.tab==="pk"?"all":null);
+    return;
+  }
+  var bDate=e.target.closest("[data-basis-date]");
+  if(bDate){
+    ui.basis="date";
+    ui.basisDate=bDate.dataset.basisDate;
+    savePrefs();
+    renderAll(ui.tab==="pk"?"all":null);
+  }
+}
+function handleBasisChange(e){
+  if(e.target.dataset&&e.target.dataset.basisInput){
+    if(e.target.value){
+      ui.basis="date";
+      ui.basisDate=e.target.value;
+      savePrefs();
+      renderAll(ui.tab==="pk"?"all":null);
+    }
+  }
+}
+
 function bind(){
   document.querySelector(".tabs").addEventListener("click",function(e){var b=e.target.closest(".tab");if(b)setTab(b.dataset.tab);});
   document.querySelector(".tabs").addEventListener("keydown",function(e){
@@ -1062,6 +1461,25 @@ function bind(){
   });
   document.addEventListener("click",function(e){var g=e.target.closest("[data-goto]");if(g)setTab(g.dataset.goto);});
 
+  // 紀錄頁日期切換
+  $("#rec-date").addEventListener("change",function(e){
+    if(!e.target.value)return;
+    flushAll();
+    ui.recDate=e.target.value;
+    recKey="";
+    savePrefs();
+    renderRecord();
+  });
+  $("#rec-date-pills").addEventListener("click",function(e){
+    var b=e.target.closest("[data-recdate]");
+    if(!b)return;
+    flushAll();
+    ui.recDate=b.dataset.recdate;
+    recKey="";
+    savePrefs();
+    renderRecord();
+  });
+
   $("#rec-events").addEventListener("click",function(e){var b=e.target.closest("[data-ev]");if(!b)return;flushAll();ui.event=b.dataset.ev;savePrefs();renderRecord();});
   $("#rec-filter").addEventListener("click",function(e){var b=e.target.closest("[data-f]");if(!b)return;ui.filter=b.dataset.f;savePrefs();renderRecord();});
   var list=$("#rec-list");
@@ -1070,8 +1488,14 @@ function bind(){
     var clean=inp.value.replace(/\D/g,"").slice(0,3);
     if(clean!==inp.value)inp.value=clean;
     var id=inp.dataset.sid;dirty[id]=true;
-    var sc={};sc[ui.event]=clean===""?null:Number(clean);
-    queue(id,{scores:sc},600);
+    var val=clean===""?null:Number(clean);
+    var sbd={};sbd[ui.recDate]={};sbd[ui.recDate][ui.event]=val;
+    var patch={scoresByDate:sbd};
+    if(ui.recDate==="legacy"){
+      var sc={};sc[ui.event]=val;
+      patch.scores=sc;
+    }
+    queue(id,patch,600);
     patchRecord();
     $("#rec-events").innerHTML=eventChips(ui.event,false);
   });
@@ -1086,6 +1510,32 @@ function bind(){
     var all=Array.prototype.slice.call(list.querySelectorAll(".cnt-in"));
     var nx=all[all.indexOf(inp)+1];
     if(nx){nx.focus();}else{inp.blur();}
+  });
+
+  // 排名與 PK 的採計基準切換
+  $("#rank-basis").addEventListener("click",handleBasisClick);
+  $("#rank-basis").addEventListener("change",handleBasisChange);
+  $("#pk-basis").addEventListener("click",handleBasisClick);
+  $("#pk-basis").addEventListener("change",handleBasisChange);
+
+  // 動態加權勾選
+  $("#rank-weights").addEventListener("click",function(e){
+    var b=e.target.closest("[data-wev]");
+    if(!b)return;
+    var k=b.dataset.wev;
+    var idx=ui.weightEvs.indexOf(k);
+    if(idx>=0){
+      if(ui.weightEvs.length<=1){
+        toast("請至少保留 1 個加權計算項目！");
+        return;
+      }
+      ui.weightEvs.splice(idx,1);
+    }else{
+      ui.weightEvs.push(k);
+      ui.weightEvs.sort(function(a,b){return EVK.indexOf(a)-EVK.indexOf(b);});
+    }
+    savePrefs();
+    renderRank();
   });
 
   $("#rank-events").addEventListener("click",function(e){var b=e.target.closest("[data-ev]");if(!b)return;ui.rankView=b.dataset.ev;savePrefs();renderRank();});
@@ -1137,7 +1587,7 @@ function bind(){
     }
     if(b.dataset.add){
       var max=students.reduce(function(m,x){return Math.max(m,x.no);},0);
-      adapter.create({no:max+1,name:"",gender:b.dataset.add,scores:emptyScores()})
+      adapter.create({no:max+1,name:"",gender:b.dataset.add,scores:emptyScores(),scoresByDate:{}})
         .then(function(r){if(r&&r.id)focusAfter="nm-"+r.id;rosKey="";renderAll();})
         .catch(function(err){onWriteError(err,null);});
       return;
@@ -1154,12 +1604,16 @@ function bind(){
 
 function clearAllScores(){
   if(ui.busy)return;ui.busy=true;renderRoster();
-  var ids=students.map(function(s){return s.id;});
   var chain=Promise.resolve();
-  ids.forEach(function(id){
+  students.forEach(function(s){
     chain=chain.then(function(){
+      var id=s.id;
       delete pending[id];clearTimeout(timers[id]);
-      return (chains[id]||Promise.resolve()).then(function(){return writeRetry(function(){return adapter.update(id,{scores:emptyScores()});});});
+      var cleanDates={};
+      Object.keys(s.scoresByDate||{}).forEach(function(dt){cleanDates[dt]=emptyScores();});
+      return (chains[id]||Promise.resolve()).then(function(){
+        return writeRetry(function(){return adapter.update(id,{scores:emptyScores(),scoresByDate:cleanDates});});
+      });
     });
   });
   chain.then(function(){toast("已清除所有成績");}).catch(function(err){onWriteError(err,null);})
@@ -1172,7 +1626,7 @@ function quickCreate(){
   if(m+f<1||m+f>60){toast("人數請輸入 1 到 60 之間。");return;}
   ui.busy=true;renderRoster();
   var chain=Promise.resolve();
-  for(var i=1;i<=m+f;i++){(function(no){chain=chain.then(function(){return adapter.create({no:no,name:"",gender:no<=m?"M":"F",scores:emptyScores()});});})(i);}
+  for(var i=1;i<=m+f;i++){(function(no){chain=chain.then(function(){return adapter.create({no:no,name:"",gender:no<=m?"M":"F",scores:emptyScores(),scoresByDate:{}});});})(i);}
   chain.then(function(){toast("名單建立好了，可以開始填姓名");}).catch(function(err){onWriteError(err,null);})
     .then(function(){ui.busy=false;rosKey="";renderAll();});
 }
@@ -1198,7 +1652,7 @@ function connectAdapter(){
 function boot(){
   loadPrefs();
   bind();
-  renderAll(); // 先把畫面外框與「正在讀取雲端資料…」畫出來，確保按鈕都能點
+  renderAll();
   if(window.myFirebaseAdapter){
     connectAdapter();
   }else{
