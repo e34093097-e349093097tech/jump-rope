@@ -1184,10 +1184,21 @@ function start(){
   });
 }
 function boot(){
-  loadPrefs();bind();
-  adapter = window.myFirebaseAdapter;
-  mode = adapter.kind;
-  start();
+  loadPrefs();
+  bind();
+  renderAll(); // 先把「正在讀取雲端資料…」與分頁按鈕正常畫出來
+  
+  // 等待 Firebase 模組載入完成後再啟動連線
+  function waitFirebase(){
+    if(window.myFirebaseAdapter){
+      adapter = window.myFirebaseAdapter;
+      mode = adapter.kind;
+      start();
+    } else {
+      setTimeout(waitFirebase, 50); // 每 0.05 秒檢查一次，直到載入完成
+    }
+  }
+  waitFirebase();
 }
 boot();
 })();
